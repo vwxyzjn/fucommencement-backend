@@ -18,12 +18,39 @@ const (
 
 // Migrate migrates the database schema
 func Migrate() {
-	// db := makeConnection()
-	// defer db.Close()
-	// _, err := db.Exec(`
-	// 	CREATE TABLE student ( id integer, data varchar(32) )
-	// `)
-	// checkErr(err)
+	db := makeConnection()
+	defer db.Close()
+	_, err := db.Exec(`
+		CREATE TABLE student (
+			"name" TEXT,
+			"furmanID" INT PRIMARY KEY NOT NULL,
+			"anticipatedCompletionDate" TEXT,
+			"degreeExpected" TEXT,
+			"majors" TEXT,
+			"interdisciplinaryMinor" TEXT,
+			"diplomafirstName" TEXT,
+			"diplomamiddleName" TEXT,
+			"diplomalastName" TEXT,
+			"hometownAndState" TEXT,
+			"pronounceFirstName" TEXT,
+			"pronounceMiddleName" TEXT,
+			"pronounceLastName" TEXT,
+			"rhymeFirstName" TEXT,
+			"rhymeMiddleName" TEXT,
+			"rhymeLastName" TEXT,
+			"postGradAddress" TEXT,
+			"postGradAddressTwo" TEXT,
+			"postGradCity" TEXT,
+			"postGradState" TEXT,
+			"postGradPostalCode" TEXT,
+			"postGradTelephone" TEXT,
+			"postGradEmail" TEXT,
+			"intentConfirm" TEXT,
+			"namePronunciation" bytea,
+			"profilePicture" bytea
+		)
+	`)
+	CheckErr(err)
 }
 
 func test() {
@@ -34,24 +61,24 @@ func test() {
 
 	var lastInsertId int
 	err := db.QueryRow("INSERT INTO userinfo(username,departname,created) VALUES($1,$2,$3) returning uid;", "astaxie", "研发部门", "2012-12-09").Scan(&lastInsertId)
-	checkErr(err)
+	CheckErr(err)
 	fmt.Println("last inserted id =", lastInsertId)
 
 	fmt.Println("# Updating")
 	stmt, err := db.Prepare("update userinfo set username=$1 where uid=$2")
-	checkErr(err)
+	CheckErr(err)
 
 	res, err := stmt.Exec("astaxieupdate", lastInsertId)
-	checkErr(err)
+	CheckErr(err)
 
 	affect, err := res.RowsAffected()
-	checkErr(err)
+	CheckErr(err)
 
 	fmt.Println(affect, "rows changed")
 
 	fmt.Println("# Querying")
 	rows, err := db.Query("SELECT * FROM userinfo")
-	checkErr(err)
+	CheckErr(err)
 
 	for rows.Next() {
 		var uid int
@@ -59,20 +86,20 @@ func test() {
 		var department string
 		var created time.Time
 		err = rows.Scan(&uid, &username, &department, &created)
-		checkErr(err)
+		CheckErr(err)
 		fmt.Println("uid | username | department | created ")
 		fmt.Printf("%3v | %8v | %6v | %6v\n", uid, username, department, created)
 	}
 
 	fmt.Println("# Deleting")
 	stmt, err = db.Prepare("delete from userinfo where uid=$1")
-	checkErr(err)
+	CheckErr(err)
 
 	res, err = stmt.Exec(lastInsertId)
-	checkErr(err)
+	CheckErr(err)
 
 	affect, err = res.RowsAffected()
-	checkErr(err)
+	CheckErr(err)
 
 	fmt.Println(affect, "rows changed")
 }
@@ -82,12 +109,13 @@ func makeConnection() *sql.DB {
 		"password=%s dbname=%s sslmode=require",
 		host, port, user, password, dbname)
 	db, err := sql.Open("postgres", psqlInfo)
-	checkErr(err)
+	CheckErr(err)
 
 	return db
 }
 
-func checkErr(err error) {
+// CheckErr ..
+func CheckErr(err error) {
 	if err != nil {
 		panic(err)
 	}
@@ -98,6 +126,6 @@ func SaveData(data []byte) error {
 	db := makeConnection()
 	defer db.Close()
 	_, err := db.Exec("INSERT INTO k(file_name, blob, file_size) VALUES($1,$2,$3)", "test", data, 4)
-	checkErr(err)
+	CheckErr(err)
 	return err
 }
