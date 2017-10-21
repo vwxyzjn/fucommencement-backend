@@ -8,39 +8,9 @@ import (
 	"net/http"
 	"reflect"
 	"strconv"
-	_ "strconv"
 
 	"github.com/gin-gonic/gin"
 )
-
-type studentInfo struct {
-	name                      string
-	furmanID                  int64
-	anticipatedCompletionDate string
-	degreeExpected            string
-	majors                    string
-	interdisciplinaryMinor    string
-	diplomafirstName          string
-	diplomamiddleName         string
-	diplomalastName           string
-	hometownAndState          string
-	pronounceFirstName        string
-	pronounceMiddleName       string
-	pronounceLastName         string
-	rhymeFirstName            string
-	rhymeMiddleName           string
-	rhymeLastName             string
-	postGradAddress           string
-	postGradAddressTwo        string
-	postGradCity              string
-	postGradState             string
-	postGradPostalCode        string
-	postGradTelephone         string
-	postGradEmail             string
-	intentConfirm             string
-	namePronunciation         []byte
-	profilePicture            []byte
-}
 
 // Setup setups the server http end points
 func Setup() {
@@ -57,46 +27,45 @@ func testGET(c *gin.Context) {
 }
 
 func commencementPOST(c *gin.Context) {
-	studentData := &studentInfo{
-		name: c.PostForm("name"),
-		anticipatedCompletionDate: c.PostForm("anticipatedCompletionDate"),
-		degreeExpected:            c.PostForm("degreeExpected"),
-		majors:                    c.PostForm("interdisciplinaryMinor"),
-		diplomafirstName:          c.PostForm("diplomafirstName"),
-		diplomamiddleName:         c.PostForm("diplomamiddleName"),
-		diplomalastName:           c.PostForm("diplomalastName"),
-		hometownAndState:          c.PostForm("hometownAndState"),
-		pronounceFirstName:        c.PostForm("pronounceFirstName"),
-		pronounceMiddleName:       c.PostForm("pronounceMiddleName"),
-		pronounceLastName:         c.PostForm("pronounceLastName"),
-		rhymeFirstName:            c.PostForm("rhymeFirstName"),
-		rhymeMiddleName:           c.PostForm("rhymeMiddleName"),
-		rhymeLastName:             c.PostForm("rhymeLastName"),
-		postGradAddress:           c.PostForm("postGradAddress"),
-		postGradAddressTwo:        c.PostForm("postGradAddressTwo"),
-		postGradCity:              c.PostForm("postGradCity"),
-		postGradState:             c.PostForm("postGradState"),
-		postGradPostalCode:        c.PostForm("postGradPostalCode"),
-		postGradTelephone:         c.PostForm("postGradTelephone"),
-		postGradEmail:             c.PostForm("postGradEmail"),
-		intentConfirm:             c.PostForm("intentConfirm"),
+	studentData := &StudentInfo{
+		Name: c.PostForm("name"),
+		AnticipatedCompletionDate: c.PostForm("anticipatedCompletionDate"),
+		DegreeExpected:            c.PostForm("degreeExpected"),
+		Majors:                    c.PostForm("Majors"),
+		InterdisciplinaryMinor:    c.PostForm("interdisciplinaryMinor"),
+		DiplomaFirstName:          c.PostForm("diplomafirstName"),
+		DiplomaMiddleName:         c.PostForm("diplomamiddleName"),
+		DiplomaLastName:           c.PostForm("diplomalastName"),
+		HometownAndState:          c.PostForm("hometownAndState"),
+		PronounceFirstName:        c.PostForm("pronounceFirstName"),
+		PronounceMiddleName:       c.PostForm("pronounceMiddleName"),
+		PronounceLastName:         c.PostForm("pronounceLastName"),
+		RhymeFirstName:            c.PostForm("rhymeFirstName"),
+		RhymeMiddleName:           c.PostForm("rhymeMiddleName"),
+		RhymeLastName:             c.PostForm("rhymeLastName"),
+		PostGradAddress:           c.PostForm("postGradAddress"),
+		PostGradAddressTwo:        c.PostForm("postGradAddressTwo"),
+		PostGradCity:              c.PostForm("postGradCity"),
+		PostGradState:             c.PostForm("postGradState"),
+		PostGradPostalCode:        c.PostForm("postGradPostalCode"),
+		PostGradTelephone:         c.PostForm("postGradTelephone"),
+		PostGradEmail:             c.PostForm("postGradEmail"),
+		IntentConfirm:             c.PostForm("intentConfirm"),
 	}
-	studentData.namePronunciation = readFile(c.FormFile("namePronunciation"))
-	studentData.profilePicture = readFile(c.FormFile("namePronunciation"))
-	studentData.furmanID, _ = strconv.ParseInt(c.PostForm("furmanID"), 10, 64)
+	temp, _ := strconv.ParseInt(c.PostForm("furmanID"), 10, 64)
+	studentData.FurmanID = int(temp)
+	studentData.NamePronunciation = readFile(c.FormFile("namePronunciation"))
+	studentData.ProfilePicture = readFile(c.FormFile("namePronunciation"))
 
-	// SaveData(buf.Bytes())
-	err := SaveData(studentData)
-	CheckErr(err)
-	c.String(http.StatusOK, fmt.Sprintf("File %s %d", reflect.TypeOf(studentData.namePronunciation), studentData.furmanID))
-	fmt.Println(studentData.furmanID)
+	studentData.CreateEntry()
+	c.String(http.StatusOK, fmt.Sprintf("File %s %d", reflect.TypeOf(studentData.NamePronunciation), studentData.FurmanID))
+	fmt.Println(studentData.FurmanID)
 
 }
 
 // readFile is a helper function to store images and sounds
 func readFile(file *multipart.FileHeader, err error) []byte {
 	multipartFile, err := file.Open()
-	CheckErr(err)
 	buf := bytes.NewBuffer(nil)
 	io.Copy(buf, multipartFile)
 	return buf.Bytes()

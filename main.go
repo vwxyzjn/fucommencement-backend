@@ -5,7 +5,7 @@ import (
 )
 
 func main() {
-	// backend.Migrate()
+	backend.Migrate()
 	backend.Setup()
 	// r.Run() // listen and serve on 0.0.0.0:8080
 }
