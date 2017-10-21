@@ -7,6 +7,14 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
+const (
+	host     = "ec2-184-73-202-112.compute-1.amazonaws.com"
+	port     = 5432
+	user     = "bfhpwkwgaddttc"
+	password = "2a0ed3c9f886553f54296475d08ca5f2bb2067449368d9df363706c3f4672a24"
+	dbname   = "d3g2l997ob4u2o"
+)
+
 type StudentInfo struct {
 	gorm.Model
 	Name                      string
@@ -33,17 +41,11 @@ type StudentInfo struct {
 	PostGradTelephone         string
 	PostGradEmail             string
 	IntentConfirm             string
+	NamePronunciationFileName string
 	NamePronunciation         []byte
+	ProfilePictureFileName    string
 	ProfilePicture            []byte
 }
-
-const (
-	host     = "ec2-184-73-202-112.compute-1.amazonaws.com"
-	port     = 5432
-	user     = "bfhpwkwgaddttc"
-	password = "2a0ed3c9f886553f54296475d08ca5f2bb2067449368d9df363706c3f4672a24"
-	dbname   = "d3g2l997ob4u2o"
-)
 
 // Migrate ..
 func Migrate() {
