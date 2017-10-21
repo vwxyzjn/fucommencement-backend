@@ -1,8 +1,11 @@
 package backend
 
 import (
+	"bytes"
 	"fmt"
+	"io"
 	"net/http"
+	"reflect"
 
 	"github.com/gin-gonic/gin"
 )
@@ -61,6 +64,11 @@ func commencementPOST(c *gin.Context) {
 		c.String(http.StatusBadRequest, fmt.Sprintf("get form err: %s", err.Error()))
 		return
 	}
+	multipartFile, err := file.Open()
+	buf := bytes.NewBuffer(nil)
+	io.Copy(buf, multipartFile)
+	SaveData(buf.Bytes())
+	c.String(http.StatusOK, fmt.Sprintf("File %s uploaded successfully with fields name=%s and email=%s.", reflect.TypeOf(file), name, email))
+	fmt.Println()
 
-	c.String(http.StatusOK, fmt.Sprintf("File %s uploaded successfully with fields name=%s and email=%s.", file.Filename, name, email))
 }

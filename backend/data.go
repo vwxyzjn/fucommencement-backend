@@ -92,3 +92,12 @@ func checkErr(err error) {
 		panic(err)
 	}
 }
+
+// SaveData ..
+func SaveData(data []byte) error {
+	db := makeConnection()
+	defer db.Close()
+	_, err := db.Exec("INSERT INTO k(file_name, blob, file_size) VALUES($1,$2,$3)", "test", data, 4)
+	checkErr(err)
+	return err
+}
