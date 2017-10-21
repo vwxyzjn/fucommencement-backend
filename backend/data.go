@@ -18,12 +18,12 @@ const (
 
 // Migrate migrates the database schema
 func Migrate() {
-	db := makeConnection()
-	defer db.Close()
-	_, err := db.Exec(`
-		CREATE TABLE student ( id integer, data varchar(32) )
-	`)
-	checkErr(err)
+	// db := makeConnection()
+	// defer db.Close()
+	// _, err := db.Exec(`
+	// 	CREATE TABLE student ( id integer, data varchar(32) )
+	// `)
+	// checkErr(err)
 }
 
 func test() {
