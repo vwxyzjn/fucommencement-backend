@@ -122,10 +122,64 @@ func CheckErr(err error) {
 }
 
 // SaveData ..
-func SaveData(data []byte) error {
+func SaveData(data *studentInfo) error {
 	db := makeConnection()
 	defer db.Close()
-	_, err := db.Exec("INSERT INTO k(file_name, blob, file_size) VALUES($1,$2,$3)", "test", data, 4)
+	_, err := db.Exec(`INSERT INTO student (
+			"name",
+			"furmanID",
+			"anticipatedCompletionDate",
+			"degreeExpected",
+			"majors",
+			"interdisciplinaryMinor",
+			"diplomafirstName",
+			"diplomamiddleName",
+			"diplomalastName",
+			"hometownAndState",
+			"pronounceFirstName",
+			"pronounceMiddleName",
+			"pronounceLastName",
+			"rhymeFirstName",
+			"rhymeMiddleName",
+			"rhymeLastName",
+			"postGradAddress",
+			"postGradAddressTwo",
+			"postGradCity",
+			"postGradState",
+			"postGradPostalCode",
+			"postGradTelephone",
+			"postGradEmail",
+			"intentConfirm",
+			"namePronunciation",
+			"profilePicture"
+		) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26)`,
+		data.name,
+		data.furmanID,
+		data.anticipatedCompletionDate,
+		data.degreeExpected,
+		data.majors,
+		data.interdisciplinaryMinor,
+		data.diplomafirstName,
+		data.diplomamiddleName,
+		data.diplomalastName,
+		data.hometownAndState,
+		data.pronounceFirstName,
+		data.pronounceMiddleName,
+		data.pronounceLastName,
+		data.rhymeFirstName,
+		data.rhymeMiddleName,
+		data.rhymeLastName,
+		data.postGradAddress,
+		data.postGradAddressTwo,
+		data.postGradCity,
+		data.postGradState,
+		data.postGradPostalCode,
+		data.postGradTelephone,
+		data.postGradEmail,
+		data.intentConfirm,
+		data.namePronunciation,
+		data.profilePicture,
+	)
 	CheckErr(err)
 	return err
 }

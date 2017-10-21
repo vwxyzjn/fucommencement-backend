@@ -58,6 +58,7 @@ func testGET(c *gin.Context) {
 
 func commencementPOST(c *gin.Context) {
 	studentData := &studentInfo{
+		name: c.PostForm("name"),
 		anticipatedCompletionDate: c.PostForm("anticipatedCompletionDate"),
 		degreeExpected:            c.PostForm("degreeExpected"),
 		majors:                    c.PostForm("interdisciplinaryMinor"),
@@ -85,6 +86,8 @@ func commencementPOST(c *gin.Context) {
 	studentData.furmanID, _ = strconv.ParseInt(c.PostForm("furmanID"), 10, 64)
 
 	// SaveData(buf.Bytes())
+	err := SaveData(studentData)
+	CheckErr(err)
 	c.String(http.StatusOK, fmt.Sprintf("File %s %d", reflect.TypeOf(studentData.namePronunciation), studentData.furmanID))
 	fmt.Println(studentData.furmanID)
 
