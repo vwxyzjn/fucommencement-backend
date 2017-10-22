@@ -34,17 +34,12 @@ func testGET(c *gin.Context) {
 	})
 }
 
-type Test struct {
-	Name              string `json:"name" binding:"required"`
-	NamePronunciation []byte `json:"namePronunciation"`
-}
-
 func commencementPOST(c *gin.Context) {
 	studentData := &StudentInfo{
 		Name: c.PostForm("name"),
 		AnticipatedCompletionDate: c.PostForm("anticipatedCompletionDate"),
 		DegreeExpected:            c.PostForm("degreeExpected"),
-		Majors:                    c.PostForm("Majors"),
+		Majors:                    c.PostForm("majors"),
 		InterdisciplinaryMinor:    c.PostForm("interdisciplinaryMinor"),
 		DiplomaFirstName:          c.PostForm("diplomafirstName"),
 		DiplomaMiddleName:         c.PostForm("diplomamiddleName"),
