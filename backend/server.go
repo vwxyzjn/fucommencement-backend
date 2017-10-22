@@ -103,8 +103,8 @@ func saveFile(file multipart.File, path string, fileName string) {
 	}
 	// save the file
 	dst, err := os.Create(path + fileName)
-	defer dst.Close()
 	CheckErr(err)
+	defer dst.Close()
 	if _, err = io.Copy(dst, file); err != nil {
 		panic(err)
 	}
