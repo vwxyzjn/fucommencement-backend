@@ -69,7 +69,7 @@ func commencementPOST(c *gin.Context) {
 		studentData.ProfilePicturePath = handleUpload(profilePicture, studentData, profilePicturePath)
 	}
 
-	studentData.CreateEntry()
+	studentData.AddEntry()
 	c.String(http.StatusOK, fmt.Sprintf("File %s", studentData.Name))
 	fmt.Println(c.PostForm("name"))
 
@@ -82,7 +82,7 @@ func handleUpload(file *multipart.FileHeader, student *StudentInfo, path string)
 	multipartFile, err := file.Open()
 	CheckErr(err)
 	saveFile(multipartFile, path, fileName)
-	return path + fileName
+	return path[1:] + fileName
 }
 
 func getFileExtension(file *multipart.FileHeader) string {

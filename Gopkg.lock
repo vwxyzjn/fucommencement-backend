@@ -2,6 +2,12 @@
 
 
 [[projects]]
+  name = "github.com/algolia/algoliasearch-client-go"
+  packages = ["algoliasearch"]
+  revision = "e59aa214c4b7f847eaa2ccc387ced5dd76f3bc09"
+  version = "2.20.0"
+
+[[projects]]
   name = "github.com/gin-contrib/cors"
   packages = ["."]
   revision = "cf4846e6a636a76237a28d9286f163c132e841bc"
@@ -76,6 +82,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "6afce0af5a425f0f7df81973ff83a37e67dd237e7f724e2805719ed1776e64e5"
+  inputs-digest = "fdf742ee096c33edb6cdc624f3f53276879b33a34b901fe8e7c8e3d889f4470e"
   solver-name = "gps-cdcl"
   solver-version = 1

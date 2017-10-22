@@ -3,6 +3,7 @@ package backend
 import (
 	"fmt"
 
+	"github.com/algolia/algoliasearch-client-go/algoliasearch"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
@@ -75,6 +76,40 @@ func (s *StudentInfo) CreateEntry() {
 
 	db.Create(&s)
 
+}
+
+// AddEntry ..
+func (s *StudentInfo) AddEntry() {
+	studentData := algoliasearch.Object{
+		"name":                      s.Name,
+		"furmanID":                  s.FurmanID,
+		"anticipatedCompletionDate": s.AnticipatedCompletionDate,
+		"degreeExpected":            s.DegreeExpected,
+		"majors":                    s.Majors,
+		"interdisciplinaryMinor":    s.InterdisciplinaryMinor,
+		"diplomafirstName":          s.DiplomaFirstName,
+		"diplomamiddleName":         s.DiplomaMiddleName,
+		"diplomaLastName":           s.DiplomaLastName,
+		"hometownAndState":          s.HometownAndState,
+		"pronounceFirstName":        s.PronounceFirstName,
+		"pronounceMiddleName":       s.PronounceMiddleName,
+		"pronounceLastName":         s.PronounceLastName,
+		"rhymeFirstName":            s.RhymeFirstName,
+		"rhymeMiddleName":           s.RhymeMiddleName,
+		"rhymeLastName":             s.RhymeLastName,
+		"postGradAddress":           s.PostGradAddress,
+		"postGradAddressTwo":        s.PostGradAddressTwo,
+		"postGradCity":              s.PostGradCity,
+		"postGradState":             s.PostGradState,
+		"postGradPostalCode":        s.PostGradPostalCode,
+		"postGradTelephone":         s.PostGradTelephone,
+		"postGradEmail":             s.PostGradEmail,
+		"intentConfirm":             s.IntentConfirm,
+		"NamePronunciationPath":     s.NamePronunciationPath,
+		"ProfilePicturePath":        s.ProfilePicturePath,
+	}
+	_, err := AlgoliaIndex.AddObject(studentData)
+	CheckErr(err)
 }
 
 func connect() *gorm.DB {
