@@ -41,10 +41,8 @@ type StudentInfo struct {
 	PostGradTelephone         string
 	PostGradEmail             string
 	IntentConfirm             string
-	NamePronunciationFileName string
-	NamePronunciation         []byte
-	ProfilePictureFileName    string
-	ProfilePicture            []byte
+	NamePronunciationPath     string
+	ProfilePicturePath        string
 }
 
 // Migrate ..

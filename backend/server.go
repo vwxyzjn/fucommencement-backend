@@ -1,20 +1,27 @@
 package backend
 
 import (
-	"bytes"
 	"fmt"
 	"io"
 	"mime/multipart"
 	"net/http"
-	"reflect"
+	"os"
 	"strconv"
+	"strings"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+)
+
+const (
+	profilePicturePath    = "/commencement/profilePicture/"
+	namePronunciationPath = "/commencement/namePronunciation/"
 )
 
 // Setup setups the server http end points
 func Setup() {
 	r := gin.Default()
+	r.Use(cors.Default())
 	r.GET("/ping", testGET)
 	r.POST("/commencementPOST", commencementPOST)
 	r.Run() // listen and serve on 0.0.0.0:8080
@@ -24,6 +31,11 @@ func testGET(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"message": "pong",
 	})
+}
+
+type Test struct {
+	Name              string `json:"name" binding:"required"`
+	NamePronunciation []byte `json:"namePronunciation"`
 }
 
 func commencementPOST(c *gin.Context) {
@@ -54,19 +66,40 @@ func commencementPOST(c *gin.Context) {
 	}
 	temp, _ := strconv.ParseInt(c.PostForm("furmanID"), 10, 64)
 	studentData.FurmanID = int(temp)
-	studentData.NamePronunciation = readFile(c.FormFile("namePronunciation"))
-	studentData.ProfilePicture = readFile(c.FormFile("namePronunciation"))
+	namePronunciation, _ := c.FormFile("namePronunciation")
+	profilePicture, _ := c.FormFile("profilePicture")
+
+	studentData.NamePronunciationPath = handleUpload(namePronunciation, studentData, profilePicturePath)
+	studentData.ProfilePicturePath = handleUpload(profilePicture, studentData, namePronunciationPath)
 
 	studentData.CreateEntry()
-	c.String(http.StatusOK, fmt.Sprintf("File %s %d", reflect.TypeOf(studentData.NamePronunciation), studentData.FurmanID))
-	fmt.Println(studentData.FurmanID)
+	c.String(http.StatusOK, fmt.Sprintf("File %s", studentData.Name))
+	fmt.Println(c.PostForm("name"))
 
 }
 
-// readFile is a helper function to store images and sounds
-func readFile(file *multipart.FileHeader, err error) []byte {
+// handleUpload reads a file from c.PostForm and return its stored path
+func handleUpload(file *multipart.FileHeader, student *StudentInfo, path string) string {
+	extentionName := getFileExtension(file)
+	fileName := student.Name + "-" + strconv.Itoa(student.FurmanID) + "." + extentionName
 	multipartFile, err := file.Open()
-	buf := bytes.NewBuffer(nil)
-	io.Copy(buf, multipartFile)
-	return buf.Bytes()
+	CheckErr(err)
+	saveFile(multipartFile, path, fileName)
+	return path + fileName
+}
+
+func getFileExtension(file *multipart.FileHeader) string {
+	fileName := file.Filename
+	fileNameSplit := strings.Split(fileName, ".")
+	return fileNameSplit[len(fileNameSplit)-1]
+}
+
+func saveFile(file multipart.File, path string, fileName string) {
+	fmt.Println(path + fileName)
+	dst, err := os.Create(path + fileName)
+	defer dst.Close()
+	CheckErr(err)
+	if _, err = io.Copy(dst, file); err != nil {
+		panic(err)
+	}
 }
