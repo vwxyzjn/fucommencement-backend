@@ -14,8 +14,8 @@ import (
 )
 
 const (
-	profilePicturePath    = "/commencement/profilePicture/"
-	namePronunciationPath = "/commencement/namePronunciation/"
+	profilePicturePath    = "./commencement/profilePicture/"
+	namePronunciationPath = "./commencement/namePronunciation/"
 )
 
 // Setup setups the server http end points
@@ -24,6 +24,7 @@ func Setup() {
 	r.Use(cors.Default())
 	r.GET("/ping", testGET)
 	r.POST("/commencementPOST", commencementPOST)
+	r.StaticFS("/commencement", http.Dir("./commencement"))
 	r.Run() // listen and serve on 0.0.0.0:8080
 }
 
@@ -66,11 +67,12 @@ func commencementPOST(c *gin.Context) {
 	}
 	temp, _ := strconv.ParseInt(c.PostForm("furmanID"), 10, 64)
 	studentData.FurmanID = int(temp)
-	namePronunciation, _ := c.FormFile("namePronunciation")
-	profilePicture, _ := c.FormFile("profilePicture")
-
-	studentData.NamePronunciationPath = handleUpload(namePronunciation, studentData, profilePicturePath)
-	studentData.ProfilePicturePath = handleUpload(profilePicture, studentData, namePronunciationPath)
+	if namePronunciation, err := c.FormFile("namePronunciation"); err == nil {
+		studentData.NamePronunciationPath = handleUpload(namePronunciation, studentData, namePronunciationPath)
+	}
+	if profilePicture, err := c.FormFile("profilePicture"); err == nil {
+		studentData.ProfilePicturePath = handleUpload(profilePicture, studentData, profilePicturePath)
+	}
 
 	studentData.CreateEntry()
 	c.String(http.StatusOK, fmt.Sprintf("File %s", studentData.Name))
@@ -95,7 +97,11 @@ func getFileExtension(file *multipart.FileHeader) string {
 }
 
 func saveFile(file multipart.File, path string, fileName string) {
-	fmt.Println(path + fileName)
+	// check if the path exists
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		os.MkdirAll(path, os.ModePerm)
+	}
+	// save the file
 	dst, err := os.Create(path + fileName)
 	defer dst.Close()
 	CheckErr(err)
