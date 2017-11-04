@@ -23,6 +23,7 @@ func Setup() {
 	r := gin.Default()
 	r.Use(cors.Default())
 	r.GET("/ping", testGET)
+	r.GET("/deleteEntryGET/:objectID", deleteEntryGET)
 	r.POST("/commencementPOST", commencementPOST)
 	r.StaticFS("/commencement", http.Dir("./commencement"))
 	r.Run() // listen and serve on 0.0.0.0:8080
@@ -75,8 +76,11 @@ func commencementPOST(c *gin.Context) {
 
 }
 
-func deleteEntryPOST(c *gin.Context) {
-
+func deleteEntryGET(c *gin.Context) {
+	objectID := c.Param("objectID")
+	fmt.Println("deleted", objectID)
+	DeleteEntryByID(objectID)
+	c.String(http.StatusOK, "ok")
 }
 
 // handleUpload reads a file from c.PostForm and return its stored path

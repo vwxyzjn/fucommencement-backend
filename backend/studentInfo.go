@@ -1,7 +1,7 @@
 package backend
 
 import (
-	"fmt"
+	"os"
 	"strconv"
 
 	"github.com/algolia/algoliasearch-client-go/algoliasearch"
@@ -93,7 +93,46 @@ func getEntryByFurmanID(id int) *StudentInfo {
 	}
 	data := res.Hits[0]
 	studentData := &StudentInfo{
-		ObjectID:                  data["64555910"].(string),
+		ObjectID:                  data["objectID"].(string),
+		Name:                      data["name"].(string),
+		FurmanID:                  int(data["furmanID"].(float64)),
+		AnticipatedCompletionDate: data["anticipatedCompletionDate"].(string),
+		DegreeExpected:            data["degreeExpected"].(string),
+		Majors:                    data["majors"].(string),
+		InterdisciplinaryMinor:    data["interdisciplinaryMinor"].(string),
+		DiplomaFirstName:          data["diplomaFirstName"].(string),
+		DiplomaMiddleName:         data["diplomaMiddleName"].(string),
+		DiplomaLastName:           data["diplomaLastName"].(string),
+		HometownAndState:          data["hometownAndState"].(string),
+		PronounceFirstName:        data["pronounceFirstName"].(string),
+		PronounceMiddleName:       data["pronounceMiddleName"].(string),
+		PronounceLastName:         data["pronounceLastName"].(string),
+		RhymeFirstName:            data["rhymeFirstName"].(string),
+		RhymeMiddleName:           data["rhymeMiddleName"].(string),
+		RhymeLastName:             data["rhymeLastName"].(string),
+		PostGradAddress:           data["postGradAddress"].(string),
+		PostGradAddressTwo:        data["postGradAddressTwo"].(string),
+		PostGradCity:              data["postGradCity"].(string),
+		PostGradState:             data["postGradState"].(string),
+		PostGradPostalCode:        data["postGradPostalCode"].(string),
+		PostGradTelephone:         data["postGradTelephone"].(string),
+		PostGradEmail:             data["postGradEmail"].(string),
+		IntentConfirm:             data["intentConfirm"].(string),
+		NamePronunciationPath:     data["namePronunciationPath"].(string),
+		ProfilePicturePath:        data["profilePicturePath"].(string),
+		Honor:                     data["honor"].(string),
+	}
+
+	return studentData
+}
+
+func getEntryByID(id string) *StudentInfo {
+	data, err := AlgoliaIndex.GetObject(id, nil)
+	if err != nil {
+		panic(err)
+	}
+	studentData := &StudentInfo{
+		ObjectID:                  data["objectID"].(string),
 		Name:                      data["name"].(string),
 		FurmanID:                  int(data["furmanID"].(float64)),
 		AnticipatedCompletionDate: data["anticipatedCompletionDate"].(string),
@@ -132,10 +171,29 @@ func DeleteEntryByFrumanID(id int) {
 	if err != nil {
 		panic(err)
 	}
+	deleteFile("." + studentData.ProfilePicturePath)
+	deleteFile("." + studentData.NamePronunciationPath)
+}
+
+func DeleteEntryByID(id string) {
+	studentData := getEntryByID(id)
+	_, err := AlgoliaIndex.DeleteObject(studentData.ObjectID)
+	if err != nil {
+		panic(err)
+	}
+	deleteFile("." + studentData.ProfilePicturePath)
+	deleteFile("." + studentData.NamePronunciationPath)
+}
+
+func deleteFile(path string) {
+	err := os.Remove(path)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func Test() {
-	studentData := getEntryByFurmanID(991596)
-	fmt.Println(studentData.FurmanID)
-	fmt.Println()
+	// studentData := getEntryByFurmanID(991596)
+	// fmt.Println(studentData.FurmanID)
+	// fmt.Println()
 }
