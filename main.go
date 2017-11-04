@@ -7,6 +7,7 @@ import (
 func main() {
 	// backend.Migrate()
 	// backend.Init()
+	backend.Test()
 	backend.Setup()
 	// r.Run() // listen and serve on 0.0.0.0:8080
 }

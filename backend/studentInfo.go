@@ -1,6 +1,9 @@
 package backend
 
 import (
+	"fmt"
+	"strconv"
+
 	"github.com/algolia/algoliasearch-client-go/algoliasearch"
 )
 
@@ -75,4 +78,60 @@ func (s *StudentInfo) AddEntry() {
 	if _, err := AlgoliaIndex.AddObject(studentData); err != nil {
 		panic(err)
 	}
+}
+
+func getEntryByFurmanID(id int) {
+	params := algoliasearch.Map{
+		"restrictSearchableAttributes": []string{
+			"furmanID",
+		},
+	}
+	res, err := AlgoliaIndex.Search(strconv.Itoa(id), params)
+	if err != nil {
+		panic(err)
+	}
+	data := res.Hits[0]
+	studentData := &StudentInfo{
+		Name: data["name"],
+		AnticipatedCompletionDate: data["anticipatedCompletionDate"],
+		DegreeExpected:            data["degreeExpected"],
+		Majors:                    data["majors"],
+		InterdisciplinaryMinor:    data["interdisciplinaryMinor"],
+		DiplomaFirstName:          data["diplomaFirstName"],
+		DiplomaMiddleName:         data["diplomaMiddleName"],
+		DiplomaLastName:           data["diplomaLastName"],
+		HometownAndState:          data["hometownAndState"],
+		PronounceFirstName:        data["pronounceFirstName"],
+		PronounceMiddleName:       data["pronounceMiddleName"],
+		PronounceLastName:         data["pronounceLastName"],
+		RhymeFirstName:            data["rhymeFirstName"],
+		RhymeMiddleName:           data["rhymeMiddleName"],
+		RhymeLastName:             data["rhymeLastName"],
+		PostGradAddress:           data["postGradAddress"],
+		PostGradAddressTwo:        data["postGradAddressTwo"],
+		PostGradCity:              data["postGradCity"],
+		PostGradState:             data["postGradState"],
+		PostGradPostalCode:        data["postGradPostalCode"],
+		PostGradTelephone:         data["postGradTelephone"],
+		PostGradEmail:             data["postGradEmail"],
+		IntentConfirm:             data["intentConfirm"],
+	}
+}
+
+func DeleteEntryByFrumanID(id int) {
+
+}
+
+func Test() {
+	params := algoliasearch.Map{
+		"restrictSearchableAttributes": []string{
+			"furmanID",
+		},
+	}
+	res, err := AlgoliaIndex.Search("991596", params)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(res.Hits[0]["diplomafirstName"])
+	fmt.Println()
 }
