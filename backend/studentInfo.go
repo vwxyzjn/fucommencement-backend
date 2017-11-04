@@ -1,6 +1,7 @@
 package backend
 
 import (
+	"fmt"
 	"os"
 	"strconv"
 
@@ -186,9 +187,16 @@ func DeleteEntryByID(id string) {
 }
 
 func deleteFile(path string) {
-	err := os.Remove(path)
-	if err != nil {
-		panic(err)
+	// check if file exist first.
+	fmt.Println(path)
+	if path == "." {
+		return
+	}
+	if _, err := os.Stat(path); !os.IsNotExist(err) {
+		err := os.Remove(path)
+		if err != nil {
+			panic(err)
+		}
 	}
 }
 
