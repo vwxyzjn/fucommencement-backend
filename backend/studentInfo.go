@@ -15,6 +15,7 @@ var (
 
 // StudentInfo ..
 type StudentInfo struct {
+	ObjectID                  string
 	Name                      string
 	FurmanID                  int
 	AnticipatedCompletionDate string
@@ -53,8 +54,8 @@ func (s *StudentInfo) AddEntry() {
 		"degreeExpected":            s.DegreeExpected,
 		"majors":                    s.Majors,
 		"interdisciplinaryMinor":    s.InterdisciplinaryMinor,
-		"diplomafirstName":          s.DiplomaFirstName,
-		"diplomamiddleName":         s.DiplomaMiddleName,
+		"diplomaFirstName":          s.DiplomaFirstName,
+		"diplomaMiddleName":         s.DiplomaMiddleName,
 		"diplomaLastName":           s.DiplomaLastName,
 		"hometownAndState":          s.HometownAndState,
 		"pronounceFirstName":        s.PronounceFirstName,
@@ -80,7 +81,7 @@ func (s *StudentInfo) AddEntry() {
 	}
 }
 
-func getEntryByFurmanID(id int) {
+func getEntryByFurmanID(id int) *StudentInfo {
 	params := algoliasearch.Map{
 		"restrictSearchableAttributes": []string{
 			"furmanID",
@@ -92,46 +93,49 @@ func getEntryByFurmanID(id int) {
 	}
 	data := res.Hits[0]
 	studentData := &StudentInfo{
-		Name: data["name"],
-		AnticipatedCompletionDate: data["anticipatedCompletionDate"],
-		DegreeExpected:            data["degreeExpected"],
-		Majors:                    data["majors"],
-		InterdisciplinaryMinor:    data["interdisciplinaryMinor"],
-		DiplomaFirstName:          data["diplomaFirstName"],
-		DiplomaMiddleName:         data["diplomaMiddleName"],
-		DiplomaLastName:           data["diplomaLastName"],
-		HometownAndState:          data["hometownAndState"],
-		PronounceFirstName:        data["pronounceFirstName"],
-		PronounceMiddleName:       data["pronounceMiddleName"],
-		PronounceLastName:         data["pronounceLastName"],
-		RhymeFirstName:            data["rhymeFirstName"],
-		RhymeMiddleName:           data["rhymeMiddleName"],
-		RhymeLastName:             data["rhymeLastName"],
-		PostGradAddress:           data["postGradAddress"],
-		PostGradAddressTwo:        data["postGradAddressTwo"],
-		PostGradCity:              data["postGradCity"],
-		PostGradState:             data["postGradState"],
-		PostGradPostalCode:        data["postGradPostalCode"],
-		PostGradTelephone:         data["postGradTelephone"],
-		PostGradEmail:             data["postGradEmail"],
-		IntentConfirm:             data["intentConfirm"],
+		ObjectID:                  data["64555910"].(string),
+		Name:                      data["name"].(string),
+		FurmanID:                  int(data["furmanID"].(float64)),
+		AnticipatedCompletionDate: data["anticipatedCompletionDate"].(string),
+		DegreeExpected:            data["degreeExpected"].(string),
+		Majors:                    data["majors"].(string),
+		InterdisciplinaryMinor:    data["interdisciplinaryMinor"].(string),
+		DiplomaFirstName:          data["diplomaFirstName"].(string),
+		DiplomaMiddleName:         data["diplomaMiddleName"].(string),
+		DiplomaLastName:           data["diplomaLastName"].(string),
+		HometownAndState:          data["hometownAndState"].(string),
+		PronounceFirstName:        data["pronounceFirstName"].(string),
+		PronounceMiddleName:       data["pronounceMiddleName"].(string),
+		PronounceLastName:         data["pronounceLastName"].(string),
+		RhymeFirstName:            data["rhymeFirstName"].(string),
+		RhymeMiddleName:           data["rhymeMiddleName"].(string),
+		RhymeLastName:             data["rhymeLastName"].(string),
+		PostGradAddress:           data["postGradAddress"].(string),
+		PostGradAddressTwo:        data["postGradAddressTwo"].(string),
+		PostGradCity:              data["postGradCity"].(string),
+		PostGradState:             data["postGradState"].(string),
+		PostGradPostalCode:        data["postGradPostalCode"].(string),
+		PostGradTelephone:         data["postGradTelephone"].(string),
+		PostGradEmail:             data["postGradEmail"].(string),
+		IntentConfirm:             data["intentConfirm"].(string),
+		NamePronunciationPath:     data["namePronunciationPath"].(string),
+		ProfilePicturePath:        data["profilePicturePath"].(string),
+		Honor:                     data["honor"].(string),
 	}
+
+	return studentData
 }
 
 func DeleteEntryByFrumanID(id int) {
-
-}
-
-func Test() {
-	params := algoliasearch.Map{
-		"restrictSearchableAttributes": []string{
-			"furmanID",
-		},
-	}
-	res, err := AlgoliaIndex.Search("991596", params)
+	studentData := getEntryByFurmanID(id)
+	_, err := AlgoliaIndex.DeleteObject(studentData.ObjectID)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(res.Hits[0]["diplomafirstName"])
+}
+
+func Test() {
+	studentData := getEntryByFurmanID(991596)
+	fmt.Println(studentData.FurmanID)
 	fmt.Println()
 }

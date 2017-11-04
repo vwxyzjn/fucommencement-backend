@@ -75,6 +75,10 @@ func commencementPOST(c *gin.Context) {
 
 }
 
+func deleteEntryPOST(c *gin.Context) {
+
+}
+
 // handleUpload reads a file from c.PostForm and return its stored path
 func handleUpload(file *multipart.FileHeader, student *StudentInfo, path string) string {
 	extentionName := getFileExtension(file)
