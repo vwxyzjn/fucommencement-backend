@@ -72,13 +72,7 @@ func (s *StudentInfo) AddEntry() {
 		"profilePicturePath":        s.ProfilePicturePath,
 		"honor":                     "",
 	}
-	_, err := AlgoliaIndex.AddObject(studentData)
-	CheckErr(err)
-}
-
-// CheckErr ..
-func CheckErr(err error) {
-	if err != nil {
+	if _, err := AlgoliaIndex.AddObject(studentData); err != nil {
 		panic(err)
 	}
 }

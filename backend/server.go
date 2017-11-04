@@ -80,7 +80,9 @@ func handleUpload(file *multipart.FileHeader, student *StudentInfo, path string)
 	extentionName := getFileExtension(file)
 	fileName := student.Name + "-" + strconv.Itoa(student.FurmanID) + "." + extentionName
 	multipartFile, err := file.Open()
-	CheckErr(err)
+	if err != nil {
+		panic(err)
+	}
 	saveFile(multipartFile, path, fileName)
 	return path[1:] + fileName
 }
@@ -98,7 +100,9 @@ func saveFile(file multipart.File, path string, fileName string) {
 	}
 	// save the file
 	dst, err := os.Create(path + fileName)
-	CheckErr(err)
+	if err != nil {
+		panic(err)
+	}
 	defer dst.Close()
 	if _, err = io.Copy(dst, file); err != nil {
 		panic(err)
