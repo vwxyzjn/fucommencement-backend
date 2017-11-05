@@ -75,7 +75,7 @@ func (s *StudentInfo) AddEntry() {
 		"intentConfirm":             s.IntentConfirm,
 		"namePronunciationPath":     s.NamePronunciationPath,
 		"profilePicturePath":        s.ProfilePicturePath,
-		"honor":                     "",
+		"honor":                     s.Honor,
 	}
 	if _, err := AlgoliaIndex.AddObject(studentData); err != nil {
 		panic(err)
@@ -184,6 +184,15 @@ func DeleteEntryByID(id string) {
 	}
 	deleteFile("." + studentData.ProfilePicturePath)
 	deleteFile("." + studentData.NamePronunciationPath)
+}
+
+func DeleteEntryByIDPreservePicture(id string) {
+	studentData := getEntryByID(id)
+	_, err := AlgoliaIndex.DeleteObject(studentData.ObjectID)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("I am called")
 }
 
 func deleteFile(path string) {

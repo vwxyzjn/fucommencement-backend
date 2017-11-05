@@ -25,6 +25,7 @@ func Setup() {
 	r.GET("/ping", testGET)
 	r.GET("/deleteEntryGET/:objectID", deleteEntryGET)
 	r.POST("/commencementPOST", commencementPOST)
+	r.POST("/updateEntryPOST", updateEntryPOST)
 	r.StaticFS("/commencement", http.Dir("./commencement"))
 	r.Run() // listen and serve on 0.0.0.0:8080
 }
@@ -60,6 +61,7 @@ func commencementPOST(c *gin.Context) {
 		PostGradTelephone:         c.PostForm("postGradTelephone"),
 		PostGradEmail:             c.PostForm("postGradEmail"),
 		IntentConfirm:             c.PostForm("intentConfirm"),
+		Honor:                     "",
 	}
 	temp, _ := strconv.ParseInt(c.PostForm("furmanID"), 10, 64)
 	studentData.FurmanID = int(temp)
@@ -81,6 +83,42 @@ func deleteEntryGET(c *gin.Context) {
 	fmt.Println("deleted", objectID)
 	DeleteEntryByID(objectID)
 	c.String(http.StatusOK, "ok")
+}
+
+func updateEntryPOST(c *gin.Context) {
+	fmt.Println(c.PostForm("objectID"))
+	studentData := &StudentInfo{
+		ObjectID: c.PostForm("objectID"),
+		Name:     c.PostForm("name"),
+		AnticipatedCompletionDate: c.PostForm("anticipatedCompletionDate"),
+		DegreeExpected:            c.PostForm("degreeExpected"),
+		Majors:                    c.PostForm("majors"),
+		InterdisciplinaryMinor:    c.PostForm("interdisciplinaryMinor"),
+		DiplomaFirstName:          c.PostForm("diplomaFirstName"),
+		DiplomaMiddleName:         c.PostForm("diplomaMiddleName"),
+		DiplomaLastName:           c.PostForm("diplomaLastName"),
+		HometownAndState:          c.PostForm("hometownAndState"),
+		PronounceFirstName:        c.PostForm("pronounceFirstName"),
+		PronounceMiddleName:       c.PostForm("pronounceMiddleName"),
+		PronounceLastName:         c.PostForm("pronounceLastName"),
+		RhymeFirstName:            c.PostForm("rhymeFirstName"),
+		RhymeMiddleName:           c.PostForm("rhymeMiddleName"),
+		RhymeLastName:             c.PostForm("rhymeLastName"),
+		PostGradAddress:           c.PostForm("postGradAddress"),
+		PostGradAddressTwo:        c.PostForm("postGradAddressTwo"),
+		PostGradCity:              c.PostForm("postGradCity"),
+		PostGradState:             c.PostForm("postGradState"),
+		PostGradPostalCode:        c.PostForm("postGradPostalCode"),
+		PostGradTelephone:         c.PostForm("postGradTelephone"),
+		PostGradEmail:             c.PostForm("postGradEmail"),
+		IntentConfirm:             c.PostForm("intentConfirm"),
+		NamePronunciationPath:     c.PostForm("namePronunciationPath"),
+		ProfilePicturePath:        c.PostForm("profilePicturePath"),
+		Honor:                     c.PostForm("honor"),
+	}
+	DeleteEntryByIDPreservePicture(studentData.ObjectID)
+	studentData.AddEntry()
+	c.String(http.StatusOK, fmt.Sprintf("File %s", studentData.Name))
 }
 
 // handleUpload reads a file from c.PostForm and return its stored path
