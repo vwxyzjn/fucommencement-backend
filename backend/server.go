@@ -63,7 +63,7 @@ func commencementPOST(c *gin.Context) {
 		IntentConfirm:             c.PostForm("intentConfirm"),
 		Honor:                     "",
 	}
-	temp, _ := strconv.ParseInt(c.PostForm("furmanID"), 10, 64)
+	temp, _ := strconv.Atoi(c.PostForm("furmanID"))
 	studentData.FurmanID = int(temp)
 	if namePronunciation, err := c.FormFile("namePronunciation"); err == nil {
 		studentData.NamePronunciationPath = handleUpload(namePronunciation, studentData, namePronunciationPath)
@@ -116,6 +116,8 @@ func updateEntryPOST(c *gin.Context) {
 		ProfilePicturePath:        c.PostForm("profilePicturePath"),
 		Honor:                     c.PostForm("honor"),
 	}
+	temp, _ := strconv.Atoi(c.PostForm("furmanID"))
+	studentData.FurmanID = int(temp)
 	DeleteEntryByIDPreservePicture(studentData.ObjectID)
 	studentData.AddEntry()
 	c.String(http.StatusOK, fmt.Sprintf("File %s", studentData.Name))
