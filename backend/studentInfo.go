@@ -16,34 +16,34 @@ var (
 
 // StudentInfo ..
 type StudentInfo struct {
-	ObjectID                  string
-	Name                      string
-	FurmanID                  int
-	AnticipatedCompletionDate string
-	DegreeExpected            string
-	Majors                    string
-	InterdisciplinaryMinor    string
-	DiplomaFirstName          string
-	DiplomaMiddleName         string
-	DiplomaLastName           string
-	HometownAndState          string
-	PronounceFirstName        string
-	PronounceMiddleName       string
-	PronounceLastName         string
-	RhymeFirstName            string
-	RhymeMiddleName           string
-	RhymeLastName             string
-	PostGradAddress           string
-	PostGradAddressTwo        string
-	PostGradCity              string
-	PostGradState             string
-	PostGradPostalCode        string
-	PostGradTelephone         string
-	PostGradEmail             string
-	IntentConfirm             string
-	NamePronunciationPath     string
-	ProfilePicturePath        string
-	Honor                     string
+	ObjectID                  string `form:"objectID" json:"objectID"`
+	Name                      string `form:"name" json:"name" binding:"required"`
+	FurmanID                  int    `form:"furmanID" json:"furmanID" binding:"required"`
+	AnticipatedCompletionDate string `form:"anticipatedCompletionDate" json:"anticipatedCompletionDate" binding:"required"`
+	DegreeExpected            string `form:"degreeExpected" json:"degreeExpected" binding:"required"`
+	Majors                    string `form:"majors" json:"majors" binding:"required"`
+	InterdisciplinaryMinor    string `form:"interdisciplinaryMinor" json:"interdisciplinaryMinor" binding:"required"`
+	DiplomaFirstName          string `form:"diplomaFirstName" json:"diplomaFirstName" binding:"required"`
+	DiplomaMiddleName         string `form:"diplomaMiddleName" json:"diplomaMiddleName" binding:"required"`
+	DiplomaLastName           string `form:"diplomaLastName" json:"diplomaLastName" binding:"required"`
+	HometownAndState          string `form:"hometownAndState" json:"hometownAndState" binding:"required"`
+	PronounceFirstName        string `form:"pronounceFirstName" json:"pronounceFirstName" binding:"required"`
+	PronounceMiddleName       string `form:"pronounceMiddleName" json:"pronounceMiddleName" binding:"required"`
+	PronounceLastName         string `form:"pronounceLastName" json:"pronounceLastName" binding:"required"`
+	RhymeFirstName            string `form:"rhymeFirstName" json:"rhymeFirstName" binding:"required"`
+	RhymeMiddleName           string `form:"rhymeMiddleName" json:"rhymeMiddleName" binding:"required"`
+	RhymeLastName             string `form:"rhymeLastName" json:"rhymeLastName" binding:"required"`
+	PostGradAddress           string `form:"postGradAddress" json:"postGradAddress" binding:"required"`
+	PostGradAddressTwo        string `form:"postGradAddressTwo" json:"postGradAddressTwo" binding:"required"`
+	PostGradCity              string `form:"postGradCity" json:"postGradCity" binding:"required"`
+	PostGradState             string `form:"postGradState" json:"postGradState" binding:"required"`
+	PostGradPostalCode        string `form:"postGradPostalCode" json:"postGradPostalCode" binding:"required"`
+	PostGradTelephone         string `form:"postGradTelephone" json:"postGradTelephone" binding:"required"`
+	PostGradEmail             string `form:"postGradEmail" json:"postGradEmail" binding:"required"`
+	IntentConfirm             string `form:"intentConfirm" json:"intentConfirm" binding:"required"`
+	NamePronunciationPath     string `form:"namePronunciationPath" json:"namePronunciationPath"`
+	ProfilePicturePath        string `form:"profilePicturePath" json:"profilePicturePath"`
+	Honor                     string `form:"honor" json:"honor"`
 }
 
 // AddEntry ..

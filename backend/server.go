@@ -37,45 +37,23 @@ func testGET(c *gin.Context) {
 }
 
 func commencementPOST(c *gin.Context) {
-	studentData := &StudentInfo{
-		Name: c.PostForm("name"),
-		AnticipatedCompletionDate: c.PostForm("anticipatedCompletionDate"),
-		DegreeExpected:            c.PostForm("degreeExpected"),
-		Majors:                    c.PostForm("majors"),
-		InterdisciplinaryMinor:    c.PostForm("interdisciplinaryMinor"),
-		DiplomaFirstName:          c.PostForm("diplomaFirstName"),
-		DiplomaMiddleName:         c.PostForm("diplomaMiddleName"),
-		DiplomaLastName:           c.PostForm("diplomaLastName"),
-		HometownAndState:          c.PostForm("hometownAndState"),
-		PronounceFirstName:        c.PostForm("pronounceFirstName"),
-		PronounceMiddleName:       c.PostForm("pronounceMiddleName"),
-		PronounceLastName:         c.PostForm("pronounceLastName"),
-		RhymeFirstName:            c.PostForm("rhymeFirstName"),
-		RhymeMiddleName:           c.PostForm("rhymeMiddleName"),
-		RhymeLastName:             c.PostForm("rhymeLastName"),
-		PostGradAddress:           c.PostForm("postGradAddress"),
-		PostGradAddressTwo:        c.PostForm("postGradAddressTwo"),
-		PostGradCity:              c.PostForm("postGradCity"),
-		PostGradState:             c.PostForm("postGradState"),
-		PostGradPostalCode:        c.PostForm("postGradPostalCode"),
-		PostGradTelephone:         c.PostForm("postGradTelephone"),
-		PostGradEmail:             c.PostForm("postGradEmail"),
-		IntentConfirm:             c.PostForm("intentConfirm"),
-		Honor:                     "",
-	}
-	temp, _ := strconv.Atoi(c.PostForm("furmanID"))
-	studentData.FurmanID = int(temp)
-	if namePronunciation, err := c.FormFile("namePronunciation"); err == nil {
-		studentData.NamePronunciationPath = handleUpload(namePronunciation, studentData, namePronunciationPath)
-	}
-	if profilePicture, err := c.FormFile("profilePicture"); err == nil {
-		studentData.ProfilePicturePath = handleUpload(profilePicture, studentData, profilePicturePath)
-	}
+	var form StudentInfo
+	if err := c.Bind(&form); err == nil {
+		if namePronunciation, err := c.FormFile("namePronunciation"); err == nil {
+			form.NamePronunciationPath = handleUpload(namePronunciation, &form, namePronunciationPath)
+		}
+		if profilePicture, err := c.FormFile("profilePicture"); err == nil {
+			form.ProfilePicturePath = handleUpload(profilePicture, &form, profilePicturePath)
+		}
+		form.AddEntry()
+		c.String(http.StatusOK, fmt.Sprintf("File %s", form.Name))
+		fmt.Println(c.PostForm("name"))
 
-	studentData.AddEntry()
-	c.String(http.StatusOK, fmt.Sprintf("File %s", studentData.Name))
-	fmt.Println(c.PostForm("name"))
-
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	}
+	// temp, _ := strconv.Atoi(c.PostForm("furmanID"))
+	// studentData.FurmanID = int(temp)
 }
 
 func deleteEntryGET(c *gin.Context) {
