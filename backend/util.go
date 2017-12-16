@@ -1,6 +1,7 @@
 package backend
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"mime/multipart"
@@ -61,4 +62,10 @@ func DeleteFile(path string) {
 			panic(err)
 		}
 	}
+}
+
+// PrettyPrint prettily prints variable (struct, map, array, slice) in Golang. The easiest way is through MarshalIndent function in json package.
+func PrettyPrint(v interface{}) {
+	b, _ := json.MarshalIndent(v, "", "  ")
+	println(string(b))
 }
