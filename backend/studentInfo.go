@@ -6,6 +6,8 @@ import (
 	"strconv"
 
 	"github.com/algolia/algoliasearch-client-go/algoliasearch"
+	"github.com/fatih/structs"
+	"github.com/mitchellh/mapstructure"
 )
 
 // Client, Index
@@ -16,68 +18,40 @@ var (
 
 // StudentInfo ..
 type StudentInfo struct {
-	ObjectID                  string `form:"objectID" json:"objectID"`
-	Name                      string `form:"name" json:"name" binding:"required"`
-	FurmanID                  int    `form:"furmanID" json:"furmanID" binding:"required"`
-	AnticipatedCompletionDate string `form:"anticipatedCompletionDate" json:"anticipatedCompletionDate" binding:"required"`
-	DegreeExpected            string `form:"degreeExpected" json:"degreeExpected" binding:"required"`
-	Majors                    string `form:"majors" json:"majors" binding:"required"`
-	InterdisciplinaryMinor    string `form:"interdisciplinaryMinor" json:"interdisciplinaryMinor" binding:"required"`
-	DiplomaFirstName          string `form:"diplomaFirstName" json:"diplomaFirstName" binding:"required"`
-	DiplomaMiddleName         string `form:"diplomaMiddleName" json:"diplomaMiddleName" binding:"required"`
-	DiplomaLastName           string `form:"diplomaLastName" json:"diplomaLastName" binding:"required"`
-	HometownAndState          string `form:"hometownAndState" json:"hometownAndState" binding:"required"`
-	PronounceFirstName        string `form:"pronounceFirstName" json:"pronounceFirstName" binding:"required"`
-	PronounceMiddleName       string `form:"pronounceMiddleName" json:"pronounceMiddleName" binding:"required"`
-	PronounceLastName         string `form:"pronounceLastName" json:"pronounceLastName" binding:"required"`
-	RhymeFirstName            string `form:"rhymeFirstName" json:"rhymeFirstName" binding:"required"`
-	RhymeMiddleName           string `form:"rhymeMiddleName" json:"rhymeMiddleName" binding:"required"`
-	RhymeLastName             string `form:"rhymeLastName" json:"rhymeLastName" binding:"required"`
-	PostGradAddress           string `form:"postGradAddress" json:"postGradAddress" binding:"required"`
-	PostGradAddressTwo        string `form:"postGradAddressTwo" json:"postGradAddressTwo" binding:"required"`
-	PostGradCity              string `form:"postGradCity" json:"postGradCity" binding:"required"`
-	PostGradState             string `form:"postGradState" json:"postGradState" binding:"required"`
-	PostGradPostalCode        string `form:"postGradPostalCode" json:"postGradPostalCode" binding:"required"`
-	PostGradTelephone         string `form:"postGradTelephone" json:"postGradTelephone" binding:"required"`
-	PostGradEmail             string `form:"postGradEmail" json:"postGradEmail" binding:"required"`
-	IntentConfirm             string `form:"intentConfirm" json:"intentConfirm" binding:"required"`
-	NamePronunciationPath     string `form:"namePronunciationPath" json:"namePronunciationPath"`
-	ProfilePicturePath        string `form:"profilePicturePath" json:"profilePicturePath"`
-	Honor                     string `form:"honor" json:"honor"`
+	ObjectID                  string `form:"objectID" json:"objectID" structs:"objectID"`
+	Name                      string `form:"name" json:"name" structs:"name" binding:"required"`
+	FurmanID                  int    `form:"furmanID" json:"furmanID" structs:"furmanID" binding:"required"`
+	AnticipatedCompletionDate string `form:"anticipatedCompletionDate" json:"anticipatedCompletionDate" structs:"anticipatedCompletionDate" binding:"required"`
+	DegreeExpected            string `form:"degreeExpected" json:"degreeExpected" structs:"degreeExpected" binding:"required"`
+	Majors                    string `form:"majors" json:"majors" structs:"majors" binding:"required"`
+	InterdisciplinaryMinor    string `form:"interdisciplinaryMinor" json:"interdisciplinaryMinor" structs:"interdisciplinaryMinor" binding:"required"`
+	DiplomaFirstName          string `form:"diplomaFirstName" json:"diplomaFirstName" structs:"diplomaFirstName" binding:"required"`
+	DiplomaMiddleName         string `form:"diplomaMiddleName" json:"diplomaMiddleName" structs:"diplomaMiddleName" binding:"required"`
+	DiplomaLastName           string `form:"diplomaLastName" json:"diplomaLastName" structs:"diplomaLastName" binding:"required"`
+	HometownAndState          string `form:"hometownAndState" json:"hometownAndState" structs:"hometownAndState" binding:"required"`
+	PronounceFirstName        string `form:"pronounceFirstName" json:"pronounceFirstName" structs:"pronounceFirstName" binding:"required"`
+	PronounceMiddleName       string `form:"pronounceMiddleName" json:"pronounceMiddleName" structs:"pronounceMiddleName" binding:"required"`
+	PronounceLastName         string `form:"pronounceLastName" json:"pronounceLastName" structs:"pronounceLastName" binding:"required"`
+	RhymeFirstName            string `form:"rhymeFirstName" json:"rhymeFirstName" structs:"rhymeFirstName" binding:"required"`
+	RhymeMiddleName           string `form:"rhymeMiddleName" json:"rhymeMiddleName" structs:"rhymeMiddleName" binding:"required"`
+	RhymeLastName             string `form:"rhymeLastName" json:"rhymeLastName" structs:"rhymeLastName" binding:"required"`
+	PostGradAddress           string `form:"postGradAddress" json:"postGradAddress" structs:"postGradAddress" binding:"required"`
+	PostGradAddressTwo        string `form:"postGradAddressTwo" json:"postGradAddressTwo" structs:"postGradAddressTwo" binding:"required"`
+	PostGradCity              string `form:"postGradCity" json:"postGradCity" structs:"postGradCity" binding:"required"`
+	PostGradState             string `form:"postGradState" json:"postGradState" structs:"postGradState" binding:"required"`
+	PostGradPostalCode        string `form:"postGradPostalCode" json:"postGradPostalCode" structs:"postGradPostalCode" binding:"required"`
+	PostGradTelephone         string `form:"postGradTelephone" json:"postGradTelephone" structs:"postGradTelephone" binding:"required"`
+	PostGradEmail             string `form:"postGradEmail" json:"postGradEmail" structs:"postGradEmail" binding:"required"`
+	IntentConfirm             string `form:"intentConfirm" json:"intentConfirm" structs:"intentConfirm" binding:"required"`
+	NamePronunciationPath     string `form:"namePronunciationPath" json:"namePronunciationPath" structs:"namePronunciationPath" `
+	ProfilePicturePath        string `form:"profilePicturePath" json:"profilePicturePath" structs:"profilePicturePath" `
+	Honor                     string `form:"honor" json:"honor" structs:"honor" `
 }
 
 // AddEntry ..
 func (s *StudentInfo) AddEntry() {
-	studentData := algoliasearch.Object{
-		"name":                      s.Name,
-		"furmanID":                  s.FurmanID,
-		"anticipatedCompletionDate": s.AnticipatedCompletionDate,
-		"degreeExpected":            s.DegreeExpected,
-		"majors":                    s.Majors,
-		"interdisciplinaryMinor":    s.InterdisciplinaryMinor,
-		"diplomaFirstName":          s.DiplomaFirstName,
-		"diplomaMiddleName":         s.DiplomaMiddleName,
-		"diplomaLastName":           s.DiplomaLastName,
-		"hometownAndState":          s.HometownAndState,
-		"pronounceFirstName":        s.PronounceFirstName,
-		"pronounceMiddleName":       s.PronounceMiddleName,
-		"pronounceLastName":         s.PronounceLastName,
-		"rhymeFirstName":            s.RhymeFirstName,
-		"rhymeMiddleName":           s.RhymeMiddleName,
-		"rhymeLastName":             s.RhymeLastName,
-		"postGradAddress":           s.PostGradAddress,
-		"postGradAddressTwo":        s.PostGradAddressTwo,
-		"postGradCity":              s.PostGradCity,
-		"postGradState":             s.PostGradState,
-		"postGradPostalCode":        s.PostGradPostalCode,
-		"postGradTelephone":         s.PostGradTelephone,
-		"postGradEmail":             s.PostGradEmail,
-		"intentConfirm":             s.IntentConfirm,
-		"namePronunciationPath":     s.NamePronunciationPath,
-		"profilePicturePath":        s.ProfilePicturePath,
-		"honor":                     s.Honor,
-	}
-	if _, err := AlgoliaIndex.AddObject(studentData); err != nil {
+	algoliaObject := algoliasearch.Object(structs.Map(s))
+	if _, err := AlgoliaIndex.AddObject(algoliaObject); err != nil {
 		panic(err)
 	}
 }
@@ -93,38 +67,11 @@ func getEntryByFurmanID(id int) *StudentInfo {
 		panic(err)
 	}
 	data := res.Hits[0]
-	studentData := &StudentInfo{
-		ObjectID:                  data["objectID"].(string),
-		Name:                      data["name"].(string),
-		FurmanID:                  int(data["furmanID"].(float64)),
-		AnticipatedCompletionDate: data["anticipatedCompletionDate"].(string),
-		DegreeExpected:            data["degreeExpected"].(string),
-		Majors:                    data["majors"].(string),
-		InterdisciplinaryMinor:    data["interdisciplinaryMinor"].(string),
-		DiplomaFirstName:          data["diplomaFirstName"].(string),
-		DiplomaMiddleName:         data["diplomaMiddleName"].(string),
-		DiplomaLastName:           data["diplomaLastName"].(string),
-		HometownAndState:          data["hometownAndState"].(string),
-		PronounceFirstName:        data["pronounceFirstName"].(string),
-		PronounceMiddleName:       data["pronounceMiddleName"].(string),
-		PronounceLastName:         data["pronounceLastName"].(string),
-		RhymeFirstName:            data["rhymeFirstName"].(string),
-		RhymeMiddleName:           data["rhymeMiddleName"].(string),
-		RhymeLastName:             data["rhymeLastName"].(string),
-		PostGradAddress:           data["postGradAddress"].(string),
-		PostGradAddressTwo:        data["postGradAddressTwo"].(string),
-		PostGradCity:              data["postGradCity"].(string),
-		PostGradState:             data["postGradState"].(string),
-		PostGradPostalCode:        data["postGradPostalCode"].(string),
-		PostGradTelephone:         data["postGradTelephone"].(string),
-		PostGradEmail:             data["postGradEmail"].(string),
-		IntentConfirm:             data["intentConfirm"].(string),
-		NamePronunciationPath:     data["namePronunciationPath"].(string),
-		ProfilePicturePath:        data["profilePicturePath"].(string),
-		Honor:                     data["honor"].(string),
+	var studentData StudentInfo
+	if err := mapstructure.Decode(data, &studentData); err != nil {
+		panic(err)
 	}
-
-	return studentData
+	return &studentData
 }
 
 func getEntryByID(id string) *StudentInfo {
@@ -132,38 +79,11 @@ func getEntryByID(id string) *StudentInfo {
 	if err != nil {
 		panic(err)
 	}
-	studentData := &StudentInfo{
-		ObjectID:                  data["objectID"].(string),
-		Name:                      data["name"].(string),
-		FurmanID:                  int(data["furmanID"].(float64)),
-		AnticipatedCompletionDate: data["anticipatedCompletionDate"].(string),
-		DegreeExpected:            data["degreeExpected"].(string),
-		Majors:                    data["majors"].(string),
-		InterdisciplinaryMinor:    data["interdisciplinaryMinor"].(string),
-		DiplomaFirstName:          data["diplomaFirstName"].(string),
-		DiplomaMiddleName:         data["diplomaMiddleName"].(string),
-		DiplomaLastName:           data["diplomaLastName"].(string),
-		HometownAndState:          data["hometownAndState"].(string),
-		PronounceFirstName:        data["pronounceFirstName"].(string),
-		PronounceMiddleName:       data["pronounceMiddleName"].(string),
-		PronounceLastName:         data["pronounceLastName"].(string),
-		RhymeFirstName:            data["rhymeFirstName"].(string),
-		RhymeMiddleName:           data["rhymeMiddleName"].(string),
-		RhymeLastName:             data["rhymeLastName"].(string),
-		PostGradAddress:           data["postGradAddress"].(string),
-		PostGradAddressTwo:        data["postGradAddressTwo"].(string),
-		PostGradCity:              data["postGradCity"].(string),
-		PostGradState:             data["postGradState"].(string),
-		PostGradPostalCode:        data["postGradPostalCode"].(string),
-		PostGradTelephone:         data["postGradTelephone"].(string),
-		PostGradEmail:             data["postGradEmail"].(string),
-		IntentConfirm:             data["intentConfirm"].(string),
-		NamePronunciationPath:     data["namePronunciationPath"].(string),
-		ProfilePicturePath:        data["profilePicturePath"].(string),
-		Honor:                     data["honor"].(string),
+	var studentData StudentInfo
+	if err := mapstructure.Decode(data, &studentData); err != nil {
+		panic(err)
 	}
-
-	return studentData
+	return &studentData
 }
 
 func DeleteEntryByFrumanID(id int) {
@@ -210,7 +130,6 @@ func deleteFile(path string) {
 }
 
 func Test() {
-	// studentData := getEntryByFurmanID(991596)
-	// fmt.Println(studentData.FurmanID)
-	// fmt.Println()
+	studentData := getEntryByFurmanID(991596)
+	fmt.Println(studentData.FurmanID)
 }
