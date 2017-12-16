@@ -11,8 +11,9 @@ import (
 
 // Client, Index
 var (
-	AlgoliaClient = algoliasearch.NewClient("TH20RENZY1", "f6fc0cc56e0b7af1fc5e5d71ff207bf6")
-	AlgoliaIndex  = AlgoliaClient.InitIndex("student")
+	AlgoliaClient      = algoliasearch.NewClient("TH20RENZY1", "f6fc0cc56e0b7af1fc5e5d71ff207bf6")
+	AlgoliaIndex       = AlgoliaClient.InitIndex("student")
+	AlgoliaSortedIndex = AlgoliaClient.InitIndex("student_by_custom_sorting")
 )
 
 // StudentInfo ..
