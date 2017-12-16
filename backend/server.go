@@ -37,16 +37,16 @@ func testGET(c *gin.Context) {
 }
 
 func commencementPOST(c *gin.Context) {
-	var form StudentInfo
-	if err := c.Bind(&form); err == nil {
+	var studentData StudentInfo
+	if err := c.Bind(&studentData); err == nil {
 		if namePronunciation, err := c.FormFile("namePronunciation"); err == nil {
-			form.NamePronunciationPath = handleUpload(namePronunciation, &form, namePronunciationPath)
+			studentData.NamePronunciationPath = handleUpload(namePronunciation, &studentData, namePronunciationPath)
 		}
 		if profilePicture, err := c.FormFile("profilePicture"); err == nil {
-			form.ProfilePicturePath = handleUpload(profilePicture, &form, profilePicturePath)
+			studentData.ProfilePicturePath = handleUpload(profilePicture, &studentData, profilePicturePath)
 		}
-		form.AddEntry()
-		c.String(http.StatusOK, fmt.Sprintf("File %s", form.Name))
+		studentData.AddEntry()
+		c.String(http.StatusOK, fmt.Sprintf("File %s", studentData.Name))
 		fmt.Println(c.PostForm("name"))
 
 	} else {
