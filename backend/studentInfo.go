@@ -86,7 +86,7 @@ func getEntryByID(id string) *StudentInfo {
 	return &studentData
 }
 
-func DeleteEntryByFrumanID(id int) {
+func deleteEntryByFrumanID(id int) {
 	studentData := getEntryByFurmanID(id)
 	_, err := AlgoliaIndex.DeleteObject(studentData.ObjectID)
 	if err != nil {
@@ -96,6 +96,7 @@ func DeleteEntryByFrumanID(id int) {
 	deleteFile("." + studentData.NamePronunciationPath)
 }
 
+// DeleteEntryByID delete algolia entry by objectID
 func DeleteEntryByID(id string) {
 	studentData := getEntryByID(id)
 	_, err := AlgoliaIndex.DeleteObject(studentData.ObjectID)
@@ -106,6 +107,7 @@ func DeleteEntryByID(id string) {
 	deleteFile("." + studentData.NamePronunciationPath)
 }
 
+// DeleteEntryByIDPreservePicture delete algolia entry but keep the profile picture
 func DeleteEntryByIDPreservePicture(id string) {
 	studentData := getEntryByID(id)
 	_, err := AlgoliaIndex.DeleteObject(studentData.ObjectID)
@@ -130,6 +132,6 @@ func deleteFile(path string) {
 }
 
 func Test() {
-	studentData := getEntryByFurmanID(991596)
-	fmt.Println(studentData.FurmanID)
+	// studentData := getEntryByFurmanID(991596)
+	// fmt.Println(studentData.FurmanID)
 }
