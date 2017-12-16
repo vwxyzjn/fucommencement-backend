@@ -44,11 +44,6 @@ func saveFile(file multipart.File, path string, fileName string) {
 	}
 }
 
-// Describe is a better println debugging method
-func Describe(i interface{}) {
-	fmt.Printf("(%v, %T)\n", i, i)
-}
-
 // DeleteFile deletes file based on directory `path`
 func DeleteFile(path string) {
 	// check if file exist first.
