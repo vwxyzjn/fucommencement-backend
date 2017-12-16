@@ -14,7 +14,7 @@ func Export() {
 
 	var hits []algoliasearch.Map
 
-	it, err := AlgoliaIndex.BrowseAll(algoliasearch.Map{"query": ""})
+	it, err := AlgoliaSortedIndex.BrowseAll(algoliasearch.Map{"query": ""})
 	if err != nil {
 		panic(err)
 	}
