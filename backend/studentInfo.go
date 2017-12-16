@@ -2,7 +2,6 @@ package backend
 
 import (
 	"fmt"
-	"os"
 	"strconv"
 
 	"github.com/algolia/algoliasearch-client-go/algoliasearch"
@@ -92,8 +91,8 @@ func deleteEntryByFrumanID(id int) {
 	if err != nil {
 		panic(err)
 	}
-	deleteFile("." + studentData.ProfilePicturePath)
-	deleteFile("." + studentData.NamePronunciationPath)
+	DeleteFile("." + studentData.ProfilePicturePath)
+	DeleteFile("." + studentData.NamePronunciationPath)
 }
 
 // DeleteEntryByID delete algolia entry by objectID
@@ -103,8 +102,8 @@ func DeleteEntryByID(id string) {
 	if err != nil {
 		panic(err)
 	}
-	deleteFile("." + studentData.ProfilePicturePath)
-	deleteFile("." + studentData.NamePronunciationPath)
+	DeleteFile("." + studentData.ProfilePicturePath)
+	DeleteFile("." + studentData.NamePronunciationPath)
 }
 
 // DeleteEntryByIDPreserveFiles delete algolia entry but keep the files
@@ -115,20 +114,6 @@ func DeleteEntryByIDPreserveFiles(id string) {
 		panic(err)
 	}
 	fmt.Println("I am called")
-}
-
-func deleteFile(path string) {
-	// check if file exist first.
-	fmt.Println(path)
-	if path == "." {
-		return
-	}
-	if _, err := os.Stat(path); !os.IsNotExist(err) {
-		err := os.Remove(path)
-		if err != nil {
-			panic(err)
-		}
-	}
 }
 
 func Test() {

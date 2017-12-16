@@ -2,12 +2,7 @@ package backend
 
 import (
 	"fmt"
-	"io"
-	"mime/multipart"
 	"net/http"
-	"os"
-	"strconv"
-	"strings"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -40,10 +35,10 @@ func commencementPOST(c *gin.Context) {
 	var studentData StudentInfo
 	if err := c.Bind(&studentData); err == nil {
 		if namePronunciation, err := c.FormFile("namePronunciation"); err == nil {
-			studentData.NamePronunciationPath = handleUpload(namePronunciation, &studentData, namePronunciationPath)
+			studentData.NamePronunciationPath = HandleUpload(namePronunciation, &studentData, namePronunciationPath)
 		}
 		if profilePicture, err := c.FormFile("profilePicture"); err == nil {
-			studentData.ProfilePicturePath = handleUpload(profilePicture, &studentData, profilePicturePath)
+			studentData.ProfilePicturePath = HandleUpload(profilePicture, &studentData, profilePicturePath)
 		}
 		studentData.AddEntry()
 	} else {
@@ -68,39 +63,5 @@ func updateEntryPOST(c *gin.Context) {
 		c.String(http.StatusOK, fmt.Sprintf("File %s", studentData.Name))
 	} else {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-	}
-}
-
-// handleUpload reads a file from c.PostForm and return its stored path
-func handleUpload(file *multipart.FileHeader, student *StudentInfo, path string) string {
-	extentionName := getFileExtension(file)
-	fileName := student.Name + "-" + strconv.Itoa(student.FurmanID) + "." + extentionName
-	multipartFile, err := file.Open()
-	if err != nil {
-		panic(err)
-	}
-	saveFile(multipartFile, path, fileName)
-	return path[1:] + fileName
-}
-
-func getFileExtension(file *multipart.FileHeader) string {
-	fileName := file.Filename
-	fileNameSplit := strings.Split(fileName, ".")
-	return fileNameSplit[len(fileNameSplit)-1]
-}
-
-func saveFile(file multipart.File, path string, fileName string) {
-	// check if the path exists
-	if _, err := os.Stat(path); os.IsNotExist(err) {
-		os.MkdirAll(path, os.ModePerm)
-	}
-	// save the file
-	dst, err := os.Create(path + fileName)
-	if err != nil {
-		panic(err)
-	}
-	defer dst.Close()
-	if _, err = io.Copy(dst, file); err != nil {
-		panic(err)
 	}
 }
