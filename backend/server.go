@@ -46,9 +46,6 @@ func commencementPOST(c *gin.Context) {
 			studentData.ProfilePicturePath = handleUpload(profilePicture, &studentData, profilePicturePath)
 		}
 		studentData.AddEntry()
-		c.String(http.StatusOK, fmt.Sprintf("File %s", studentData.Name))
-		fmt.Println(c.PostForm("name"))
-
 	} else {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	}
@@ -64,41 +61,14 @@ func deleteEntryGET(c *gin.Context) {
 }
 
 func updateEntryPOST(c *gin.Context) {
-	fmt.Println(c.PostForm("objectID"))
-	studentData := &StudentInfo{
-		ObjectID: c.PostForm("objectID"),
-		Name:     c.PostForm("name"),
-		AnticipatedCompletionDate: c.PostForm("anticipatedCompletionDate"),
-		DegreeExpected:            c.PostForm("degreeExpected"),
-		Majors:                    c.PostForm("majors"),
-		InterdisciplinaryMinor:    c.PostForm("interdisciplinaryMinor"),
-		DiplomaFirstName:          c.PostForm("diplomaFirstName"),
-		DiplomaMiddleName:         c.PostForm("diplomaMiddleName"),
-		DiplomaLastName:           c.PostForm("diplomaLastName"),
-		HometownAndState:          c.PostForm("hometownAndState"),
-		PronounceFirstName:        c.PostForm("pronounceFirstName"),
-		PronounceMiddleName:       c.PostForm("pronounceMiddleName"),
-		PronounceLastName:         c.PostForm("pronounceLastName"),
-		RhymeFirstName:            c.PostForm("rhymeFirstName"),
-		RhymeMiddleName:           c.PostForm("rhymeMiddleName"),
-		RhymeLastName:             c.PostForm("rhymeLastName"),
-		PostGradAddress:           c.PostForm("postGradAddress"),
-		PostGradAddressTwo:        c.PostForm("postGradAddressTwo"),
-		PostGradCity:              c.PostForm("postGradCity"),
-		PostGradState:             c.PostForm("postGradState"),
-		PostGradPostalCode:        c.PostForm("postGradPostalCode"),
-		PostGradTelephone:         c.PostForm("postGradTelephone"),
-		PostGradEmail:             c.PostForm("postGradEmail"),
-		IntentConfirm:             c.PostForm("intentConfirm"),
-		NamePronunciationPath:     c.PostForm("namePronunciationPath"),
-		ProfilePicturePath:        c.PostForm("profilePicturePath"),
-		Honor:                     c.PostForm("honor"),
+	var studentData StudentInfo
+	if err := c.Bind(&studentData); err == nil {
+		DeleteEntryByIDPreserveFiles(studentData.ObjectID)
+		studentData.AddEntry()
+		c.String(http.StatusOK, fmt.Sprintf("File %s", studentData.Name))
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	}
-	temp, _ := strconv.Atoi(c.PostForm("furmanID"))
-	studentData.FurmanID = int(temp)
-	DeleteEntryByIDPreservePicture(studentData.ObjectID)
-	studentData.AddEntry()
-	c.String(http.StatusOK, fmt.Sprintf("File %s", studentData.Name))
 }
 
 // handleUpload reads a file from c.PostForm and return its stored path

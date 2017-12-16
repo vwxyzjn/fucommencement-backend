@@ -107,8 +107,8 @@ func DeleteEntryByID(id string) {
 	deleteFile("." + studentData.NamePronunciationPath)
 }
 
-// DeleteEntryByIDPreservePicture delete algolia entry but keep the profile picture
-func DeleteEntryByIDPreservePicture(id string) {
+// DeleteEntryByIDPreserveFiles delete algolia entry but keep the files
+func DeleteEntryByIDPreserveFiles(id string) {
 	studentData := getEntryByID(id)
 	_, err := AlgoliaIndex.DeleteObject(studentData.ObjectID)
 	if err != nil {
