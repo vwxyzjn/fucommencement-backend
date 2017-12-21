@@ -5,11 +5,16 @@ import (
 )
 
 func main() {
-	// backend.Migrate()
-	// backend.Init()
-	backend.Test()
-	backend.Export()
+	server := &backend.Server{
+		ProfilePicturePath:    "./commencement/profilePicture/",
+		NamePronunciationPath: "./commencement/namePronunciation/",
+		AlgoliaAppID:          "TH20RENZY1",
+		AlgoliaKey:            "f6fc0cc56e0b7af1fc5e5d71ff207bf6",
+		AlgoliaIndex:          "student",
+	}
+	// server.Migrate()
+	// backend.Export()
 	// backend.GetSettings()
-	backend.Setup()
+	server.Setup()
 	// r.Run() // listen and serve on 0.0.0.0:8080
 }

@@ -8,13 +8,21 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type Server struct {
+	ProfilePicturePath    string
+	NamePronunciationPath string
+	AlgoliaAppID          string
+	AlgoliaKey            string
+	AlgoliaIndex          string
+}
+
 const (
 	profilePicturePath    = "./commencement/profilePicture/"
 	namePronunciationPath = "./commencement/namePronunciation/"
 )
 
 // Setup setups the server http end points
-func Setup() {
+func (s *Server) Setup() {
 	r := gin.Default()
 	r.Use(cors.Default())
 	r.GET("/ping", testGET)
