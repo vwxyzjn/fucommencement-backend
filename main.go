@@ -9,9 +9,18 @@ func main() {
 		ProfilePicturePath:    "./commencement/profilePicture/",
 		NamePronunciationPath: "./commencement/namePronunciation/",
 	}
-	// server.Migrate()
-	// backend.Export()
-	// backend.GetSettings()
+	replica := &backend.Server{
+		ProfilePicturePath:    "./commencement/profilePicture/",
+		NamePronunciationPath: "./commencement/namePronunciation/",
+	}
+
+	replica.Initialize(
+		"TH20RENZY1",
+		"f6fc0cc56e0b7af1fc5e5d71ff207bf6",
+		"student_by_custom_sorting",
+	)
+	// replica.Export()
+	replica.NthEntryInIndex(2)
 
 	server.Initialize(
 		"TH20RENZY1",
@@ -19,5 +28,4 @@ func main() {
 		"student",
 	)
 	server.Setup()
-	// r.Run() // listen and serve on 0.0.0.0:8080
 }

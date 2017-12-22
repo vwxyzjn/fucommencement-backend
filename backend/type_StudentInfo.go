@@ -175,3 +175,12 @@ func Test() {
 	// studentData := getEntryByFurmanID(991596)
 	// fmt.Println(studentData.FurmanID)
 }
+
+func (s *Server) NthEntryInIndex(n int) {
+	fmt.Println("NthEntryInIndex")
+	res, _ := s.AlgoliaIndex.Search("", algoliasearch.Map{
+		"page": n / 20, // 20 is the default page
+	})
+	PrettyPrint(res.Hits[n%20])
+	fmt.Println("NthEntryInIndex end")
+}
