@@ -3,6 +3,7 @@ package backend
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/algolia/algoliasearch-client-go/algoliasearch"
 	"github.com/gin-contrib/cors"
@@ -30,6 +31,7 @@ func (s *Server) Setup() {
 	r.Use(cors.Default())
 	r.GET("/ping", testGET)
 	r.GET("/deleteEntryGET/:objectID", s.deleteEntryGET)
+	r.GET("/entryByFurmanIDGET/:furmanID", s.entryByFurmanIDGET)
 	r.POST("/commencementPOST", s.commencementPOST)
 	r.POST("/updateEntryPOST", s.updateEntryPOST)
 	r.StaticFS("/commencement", http.Dir("./commencement"))
@@ -72,6 +74,17 @@ func (s *Server) updateEntryPOST(c *gin.Context) {
 		s.DeleteEntryByIDPreserveFiles(studentData.ObjectID)
 		s.AddEntry(&studentData)
 		c.String(http.StatusOK, fmt.Sprintf("File %s", studentData.Name))
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	}
+}
+
+func (s *Server) entryByFurmanIDGET(c *gin.Context) {
+	furmanID := c.Param("furmanID")
+	temp, err := strconv.Atoi(furmanID)
+	if err == nil {
+		studentData := s.getEntryByFurmanID(temp)
+		c.JSON(http.StatusOK, studentData)
 	} else {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	}
