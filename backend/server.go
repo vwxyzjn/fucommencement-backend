@@ -13,11 +13,13 @@ type Server struct {
 	NamePronunciationPath string
 	AlgoliaAppID          string
 	AlgoliaKey            string
-	AlgoliaIndex          string
+	AlgoliaIndexName      string
 }
 
 // Setup setups the server http end points
 func (s *Server) Setup() {
+	// Setup Algolia
+
 	r := gin.Default()
 	r.Use(cors.Default())
 	r.GET("/ping", testGET)
