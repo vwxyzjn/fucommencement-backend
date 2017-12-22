@@ -1,21 +1,5 @@
 package backend
 
-import (
-	"fmt"
-	"strconv"
-
-	"github.com/algolia/algoliasearch-client-go/algoliasearch"
-	"github.com/fatih/structs"
-	"github.com/mitchellh/mapstructure"
-)
-
-// Client, Index
-var (
-	AlgoliaClient      = algoliasearch.NewClient("TH20RENZY1", "f6fc0cc56e0b7af1fc5e5d71ff207bf6")
-	AlgoliaIndex       = AlgoliaClient.InitIndex("student")
-	AlgoliaSortedIndex = AlgoliaClient.InitIndex("student_by_custom_sorting")
-)
-
 // StudentInfo ..
 type StudentInfo struct {
 	ObjectID                  string `form:"objectID" json:"objectID" structs:"objectID"`
@@ -46,75 +30,6 @@ type StudentInfo struct {
 	NamePronunciationPath     string `form:"namePronunciationPath" json:"namePronunciationPath" structs:"namePronunciationPath" `
 	ProfilePicturePath        string `form:"profilePicturePath" json:"profilePicturePath" structs:"profilePicturePath" `
 	Honor                     string `form:"honor" json:"honor" structs:"honor" `
-}
-
-// AddEntry ..
-func (s *StudentInfo) AddEntry() {
-	algoliaObject := algoliasearch.Object(structs.Map(s))
-	if _, err := AlgoliaIndex.AddObject(algoliaObject); err != nil {
-		panic(err)
-	}
-}
-
-func getEntryByFurmanID(id int) *StudentInfo {
-	params := algoliasearch.Map{
-		"restrictSearchableAttributes": []string{
-			"furmanID",
-		},
-	}
-	res, err := AlgoliaIndex.Search(strconv.Itoa(id), params)
-	if err != nil {
-		panic(err)
-	}
-	data := res.Hits[0]
-	var studentData StudentInfo
-	if err := mapstructure.Decode(data, &studentData); err != nil {
-		panic(err)
-	}
-	return &studentData
-}
-
-func getEntryByID(id string) *StudentInfo {
-	data, err := AlgoliaIndex.GetObject(id, nil)
-	if err != nil {
-		panic(err)
-	}
-	var studentData StudentInfo
-	if err := mapstructure.Decode(data, &studentData); err != nil {
-		panic(err)
-	}
-	return &studentData
-}
-
-func deleteEntryByFrumanID(id int) {
-	studentData := getEntryByFurmanID(id)
-	_, err := AlgoliaIndex.DeleteObject(studentData.ObjectID)
-	if err != nil {
-		panic(err)
-	}
-	DeleteFile("." + studentData.ProfilePicturePath)
-	DeleteFile("." + studentData.NamePronunciationPath)
-}
-
-// DeleteEntryByID delete algolia entry by objectID
-func DeleteEntryByID(id string) {
-	studentData := getEntryByID(id)
-	_, err := AlgoliaIndex.DeleteObject(studentData.ObjectID)
-	if err != nil {
-		panic(err)
-	}
-	DeleteFile("." + studentData.ProfilePicturePath)
-	DeleteFile("." + studentData.NamePronunciationPath)
-}
-
-// DeleteEntryByIDPreserveFiles delete algolia entry but keep the files
-func DeleteEntryByIDPreserveFiles(id string) {
-	studentData := getEntryByID(id)
-	_, err := AlgoliaIndex.DeleteObject(studentData.ObjectID)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println("I am called")
 }
 
 func Test() {

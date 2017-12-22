@@ -23,9 +23,9 @@ func (s *Server) Setup(AlgoliaAppID string, AlgoliaKey string, AlgoliaIndexName 
 	r := gin.Default()
 	r.Use(cors.Default())
 	r.GET("/ping", testGET)
-	r.GET("/deleteEntryGET/:objectID", deleteEntryGET)
+	r.GET("/deleteEntryGET/:objectID", s.deleteEntryGET)
 	r.POST("/commencementPOST", s.commencementPOST)
-	r.POST("/updateEntryPOST", updateEntryPOST)
+	r.POST("/updateEntryPOST", s.updateEntryPOST)
 	r.StaticFS("/commencement", http.Dir("./commencement"))
 	r.Run() // listen and serve on 0.0.0.0:8080
 }
@@ -45,7 +45,7 @@ func (s *Server) commencementPOST(c *gin.Context) {
 		if profilePicture, err := c.FormFile("profilePicture"); err == nil {
 			studentData.ProfilePicturePath = HandleUpload(profilePicture, &studentData, s.ProfilePicturePath)
 		}
-		studentData.AddEntry()
+		s.Algolia.AddEntry(&studentData)
 	} else {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	}
@@ -53,18 +53,18 @@ func (s *Server) commencementPOST(c *gin.Context) {
 	// studentData.FurmanID = int(temp)
 }
 
-func deleteEntryGET(c *gin.Context) {
+func (s *Server) deleteEntryGET(c *gin.Context) {
 	objectID := c.Param("objectID")
 	fmt.Println("deleted", objectID)
-	DeleteEntryByID(objectID)
+	s.Algolia.DeleteEntryByID(objectID)
 	c.String(http.StatusOK, "ok")
 }
 
-func updateEntryPOST(c *gin.Context) {
+func (s *Server) updateEntryPOST(c *gin.Context) {
 	var studentData StudentInfo
 	if err := c.Bind(&studentData); err == nil {
-		DeleteEntryByIDPreserveFiles(studentData.ObjectID)
-		studentData.AddEntry()
+		s.Algolia.DeleteEntryByIDPreserveFiles(studentData.ObjectID)
+		s.Algolia.AddEntry(&studentData)
 		c.String(http.StatusOK, fmt.Sprintf("File %s", studentData.Name))
 	} else {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
