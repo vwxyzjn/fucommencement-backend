@@ -11,15 +11,15 @@ import (
 type Server struct {
 	ProfilePicturePath    string
 	NamePronunciationPath string
-	AlgoliaAppID          string
-	AlgoliaKey            string
-	AlgoliaIndexName      string
+	Algolia               AlgoliaInstance
 }
 
 // Setup setups the server http end points
-func (s *Server) Setup() {
+func (s *Server) Setup(AlgoliaAppID string, AlgoliaKey string, AlgoliaIndexName string) {
 	// Setup Algolia
+	s.Algolia.Initialize(AlgoliaAppID, AlgoliaKey, AlgoliaIndexName)
 
+	// Setup Router
 	r := gin.Default()
 	r.Use(cors.Default())
 	r.GET("/ping", testGET)
