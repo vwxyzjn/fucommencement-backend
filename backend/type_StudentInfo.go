@@ -176,9 +176,9 @@ func Test() {
 	// fmt.Println(studentData.FurmanID)
 }
 
-// NthEntryInIndex fetches the n-th ranked entry in the index
+// GetNthEntryInIndex fetches the n-th ranked entry in the index
 // Notice this methods assume the default ``hitsPerPage`` is 20
-func (s *Server) NthEntryInIndex(n int) {
+func (s *Server) GetNthEntryInIndex(n int) *StudentInfo {
 	fmt.Println("NthEntryInIndex")
 	res, _ := s.AlgoliaIndex.Search("", algoliasearch.Map{
 		"page": n / 20, // 20 is the default page

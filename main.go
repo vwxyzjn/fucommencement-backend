@@ -20,12 +20,12 @@ func main() {
 		"student_by_custom_sorting",
 	)
 	// replica.Export()
-	replica.NthEntryInIndex(2)
+	// replica.GetNthEntryInIndex(2)
 
 	server.Initialize(
 		"TH20RENZY1",
 		"f6fc0cc56e0b7af1fc5e5d71ff207bf6",
-		"student",
+		"student_by_custom_sorting",
 	)
 	server.Setup()
 }

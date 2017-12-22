@@ -32,6 +32,7 @@ func (s *Server) Setup() {
 	r.GET("/ping", testGET)
 	r.GET("/deleteEntryGET/:objectID", s.deleteEntryGET)
 	r.GET("/entryByFurmanIDGET/:furmanID", s.entryByFurmanIDGET)
+	r.GET("/entryByRankGET/:rank", s.entryByRankGET)
 	r.POST("/commencementPOST", s.commencementPOST)
 	r.POST("/updateEntryPOST", s.updateEntryPOST)
 	r.StaticFS("/commencement", http.Dir("./commencement"))
@@ -84,6 +85,17 @@ func (s *Server) entryByFurmanIDGET(c *gin.Context) {
 	temp, err := strconv.Atoi(furmanID)
 	if err == nil {
 		studentData := s.getEntryByFurmanID(temp)
+		c.JSON(http.StatusOK, studentData)
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	}
+}
+
+func (s *Server) entryByRankGET(c *gin.Context) {
+	rank := c.Param("rank")
+	temp, err := strconv.Atoi(rank)
+	if err == nil {
+		studentData := s.GetNthEntryInIndex(temp)
 		c.JSON(http.StatusOK, studentData)
 	} else {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
