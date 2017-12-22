@@ -16,18 +16,13 @@ type Server struct {
 	AlgoliaIndex          string
 }
 
-const (
-	profilePicturePath    = "./commencement/profilePicture/"
-	namePronunciationPath = "./commencement/namePronunciation/"
-)
-
 // Setup setups the server http end points
 func (s *Server) Setup() {
 	r := gin.Default()
 	r.Use(cors.Default())
 	r.GET("/ping", testGET)
 	r.GET("/deleteEntryGET/:objectID", deleteEntryGET)
-	r.POST("/commencementPOST", commencementPOST)
+	r.POST("/commencementPOST", s.commencementPOST)
 	r.POST("/updateEntryPOST", updateEntryPOST)
 	r.StaticFS("/commencement", http.Dir("./commencement"))
 	r.Run() // listen and serve on 0.0.0.0:8080
@@ -39,14 +34,14 @@ func testGET(c *gin.Context) {
 	})
 }
 
-func commencementPOST(c *gin.Context) {
+func (s *Server) commencementPOST(c *gin.Context) {
 	var studentData StudentInfo
 	if err := c.Bind(&studentData); err == nil {
 		if namePronunciation, err := c.FormFile("namePronunciation"); err == nil {
-			studentData.NamePronunciationPath = HandleUpload(namePronunciation, &studentData, namePronunciationPath)
+			studentData.NamePronunciationPath = HandleUpload(namePronunciation, &studentData, s.NamePronunciationPath)
 		}
 		if profilePicture, err := c.FormFile("profilePicture"); err == nil {
-			studentData.ProfilePicturePath = HandleUpload(profilePicture, &studentData, profilePicturePath)
+			studentData.ProfilePicturePath = HandleUpload(profilePicture, &studentData, s.ProfilePicturePath)
 		}
 		studentData.AddEntry()
 	} else {
