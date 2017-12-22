@@ -12,10 +12,12 @@ func main() {
 	// server.Migrate()
 	// backend.Export()
 	// backend.GetSettings()
-	server.Setup(
+
+	server.Initialize(
 		"TH20RENZY1",
 		"f6fc0cc56e0b7af1fc5e5d71ff207bf6",
 		"student",
 	)
+	server.Setup()
 	// r.Run() // listen and serve on 0.0.0.0:8080
 }

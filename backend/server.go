@@ -4,22 +4,28 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/algolia/algoliasearch-client-go/algoliasearch"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
+// Server is ...
 type Server struct {
 	ProfilePicturePath    string
 	NamePronunciationPath string
-	Algolia               AlgoliaInstance
+	AlgoliaClient         algoliasearch.Client
+	AlgoliaIndex          algoliasearch.Index
+}
+
+// Initialize initializes ``algoliasearch.Client`` and
+// ``algoliasearch.Index`` and save them into the fields of AlgoliaInstance
+func (s *Server) Initialize(AlgoliaAppID string, AlgoliaKey string, AlgoliaIndexName string) {
+	s.AlgoliaClient = algoliasearch.NewClient(AlgoliaAppID, AlgoliaKey)
+	s.AlgoliaIndex = s.AlgoliaClient.InitIndex(AlgoliaIndexName)
 }
 
 // Setup setups the server http end points
-func (s *Server) Setup(AlgoliaAppID string, AlgoliaKey string, AlgoliaIndexName string) {
-	// Setup Algolia
-	s.Algolia.Initialize(AlgoliaAppID, AlgoliaKey, AlgoliaIndexName)
-
-	// Setup Router
+func (s *Server) Setup() {
 	r := gin.Default()
 	r.Use(cors.Default())
 	r.GET("/ping", testGET)
@@ -45,7 +51,7 @@ func (s *Server) commencementPOST(c *gin.Context) {
 		if profilePicture, err := c.FormFile("profilePicture"); err == nil {
 			studentData.ProfilePicturePath = HandleUpload(profilePicture, &studentData, s.ProfilePicturePath)
 		}
-		s.Algolia.AddEntry(&studentData)
+		s.AddEntry(&studentData)
 	} else {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	}
@@ -56,15 +62,15 @@ func (s *Server) commencementPOST(c *gin.Context) {
 func (s *Server) deleteEntryGET(c *gin.Context) {
 	objectID := c.Param("objectID")
 	fmt.Println("deleted", objectID)
-	s.Algolia.DeleteEntryByID(objectID)
+	s.DeleteEntryByID(objectID)
 	c.String(http.StatusOK, "ok")
 }
 
 func (s *Server) updateEntryPOST(c *gin.Context) {
 	var studentData StudentInfo
 	if err := c.Bind(&studentData); err == nil {
-		s.Algolia.DeleteEntryByIDPreserveFiles(studentData.ObjectID)
-		s.Algolia.AddEntry(&studentData)
+		s.DeleteEntryByIDPreserveFiles(studentData.ObjectID)
+		s.AddEntry(&studentData)
 		c.String(http.StatusOK, fmt.Sprintf("File %s", studentData.Name))
 	} else {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
