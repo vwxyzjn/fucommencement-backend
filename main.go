@@ -6,26 +6,14 @@ import (
 
 func main() {
 	server := &backend.Server{
-		ProfilePicturePath:    "./commencement/profilePicture/",
-		NamePronunciationPath: "./commencement/namePronunciation/",
-	}
-	replica := &backend.Server{
-		ProfilePicturePath:    "./commencement/profilePicture/",
-		NamePronunciationPath: "./commencement/namePronunciation/",
+		Port:                   ":8080",
+		ProfilePicturePath:     "./commencement/profilePicture/",
+		NamePronunciationPath:  "./commencement/namePronunciation/",
+		AlgoliaAppID:           "TH20RENZY1",
+		AlgoliaKey:             "f6fc0cc56e0b7af1fc5e5d71ff207bf6",
+		AlgoliaIndexName:       "student",
+		AlgoliaSortedIndexName: "student_by_custom_sorting",
 	}
 
-	replica.Initialize(
-		"TH20RENZY1",
-		"f6fc0cc56e0b7af1fc5e5d71ff207bf6",
-		"student_by_custom_sorting",
-	)
-	// replica.Export()
-	// replica.GetNthEntryInIndex(2)
-
-	server.Initialize(
-		"TH20RENZY1",
-		"f6fc0cc56e0b7af1fc5e5d71ff207bf6",
-		"student_by_custom_sorting",
-	)
 	server.Setup()
 }

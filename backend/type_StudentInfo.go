@@ -180,7 +180,7 @@ func Test() {
 // Notice this methods assume the default ``hitsPerPage`` is 20
 func (s *Server) GetNthEntryInIndex(n int) *StudentInfo {
 	fmt.Println("NthEntryInIndex")
-	res, _ := s.AlgoliaIndex.Search("", algoliasearch.Map{
+	res, _ := s.AlgoliaSortedIndex.Search("", algoliasearch.Map{
 		"page": n / 20, // 20 is the default page
 	})
 	nthResult := res.Hits[n%20]

@@ -12,21 +12,23 @@ import (
 
 // Server is ...
 type Server struct {
-	ProfilePicturePath    string
-	NamePronunciationPath string
-	AlgoliaClient         algoliasearch.Client
-	AlgoliaIndex          algoliasearch.Index
-}
-
-// Initialize initializes ``algoliasearch.Client`` and
-// ``algoliasearch.Index`` and save them into the fields of AlgoliaInstance
-func (s *Server) Initialize(AlgoliaAppID string, AlgoliaKey string, AlgoliaIndexName string) {
-	s.AlgoliaClient = algoliasearch.NewClient(AlgoliaAppID, AlgoliaKey)
-	s.AlgoliaIndex = s.AlgoliaClient.InitIndex(AlgoliaIndexName)
+	Port                   string
+	ProfilePicturePath     string
+	NamePronunciationPath  string
+	AlgoliaAppID           string
+	AlgoliaKey             string
+	AlgoliaIndexName       string
+	AlgoliaSortedIndexName string
+	AlgoliaClient          algoliasearch.Client
+	AlgoliaIndex           algoliasearch.Index
+	AlgoliaSortedIndex     algoliasearch.Index
 }
 
 // Setup setups the server http end points
 func (s *Server) Setup() {
+	s.AlgoliaClient = algoliasearch.NewClient(s.AlgoliaAppID, s.AlgoliaKey)
+	s.AlgoliaIndex = s.AlgoliaClient.InitIndex(s.AlgoliaIndexName)
+	s.AlgoliaSortedIndex = s.AlgoliaClient.InitIndex(s.AlgoliaSortedIndexName)
 	r := gin.Default()
 	r.Use(cors.Default())
 	r.GET("/ping", testGET)
@@ -36,7 +38,7 @@ func (s *Server) Setup() {
 	r.POST("/commencementPOST", s.commencementPOST)
 	r.POST("/updateEntryPOST", s.updateEntryPOST)
 	r.StaticFS("/commencement", http.Dir("./commencement"))
-	r.Run(":3000") // listen and serve on 0.0.0.0:8080
+	r.Run(s.Port) // listen and serve on 0.0.0.0:8080
 }
 
 func testGET(c *gin.Context) {
