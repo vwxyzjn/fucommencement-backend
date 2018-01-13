@@ -3,9 +3,9 @@ Description= fucommencement
 After=multi-user.target
 
 [Service]
-WorkingDirectory=/root/go/src/gitlab.com/vwxyzjn/fucommencement-backend
+WorkingDirectory=/home/vwxyzjn/server/fucommencement
 Type=idle
-ExecStart=/root/go/src/gitlab.com/vwxyzjn/fucommencement-backend/fucommencement-backend
+ExecStart=/home/vwxyzjn/server/fucommencement/fucommencement-backend_linux_amd64
 Restart=always
 
 [Install]
