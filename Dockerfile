@@ -8,3 +8,5 @@ RUN wget https://github.com/golang/dep/releases/download/v0.4.1/dep-linux-amd64
 RUN mv dep-linux-amd64 /usr/bin/dep
 RUN chmod +x /usr/bin/dep
 RUN dep ensure
+
+EXPOSE 8080
