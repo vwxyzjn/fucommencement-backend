@@ -15,7 +15,7 @@ import (
 // HandleUpload reads a file from c.PostForm and return its stored path
 func HandleUpload(file *multipart.FileHeader, student *StudentInfo, path string) string {
 	extentionName := getFileExtension(file)
-	fileName := student.Name + "-" + strconv.Itoa(student.FurmanID) + uuid.Must(uuid.NewUUID()).String() + "." + extentionName
+	fileName := student.Name + "--" + strconv.Itoa(student.FurmanID) + "--" + uuid.Must(uuid.NewUUID()).String() + "." + extentionName
 	multipartFile, err := file.Open()
 	if err != nil {
 		panic(err)
