@@ -9,13 +9,13 @@ import (
 	"strconv"
 	"strings"
 
-	_ "github.com/satori/go.uuid"
+	"github.com/google/uuid"
 )
 
 // HandleUpload reads a file from c.PostForm and return its stored path
 func HandleUpload(file *multipart.FileHeader, student *StudentInfo, path string) string {
 	extentionName := getFileExtension(file)
-	fileName := student.Name + "-" + strconv.Itoa(student.FurmanID) + uuid.Must(uuid.NewV4()) + "." + extentionName
+	fileName := student.Name + "-" + strconv.Itoa(student.FurmanID) + uuid.Must(uuid.NewUUID()).String() + "." + extentionName
 	multipartFile, err := file.Open()
 	if err != nil {
 		panic(err)

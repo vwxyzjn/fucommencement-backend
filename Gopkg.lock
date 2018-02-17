@@ -38,6 +38,12 @@
   revision = "130e6b02ab059e7b717a096f397c5b60111cae74"
 
 [[projects]]
+  name = "github.com/google/uuid"
+  packages = ["."]
+  revision = "064e2069ce9c359c118179501254f67d7d37ba24"
+  version = "0.2"
+
+[[projects]]
   name = "github.com/mattn/go-isatty"
   packages = ["."]
   revision = "0360b2af4f38e8d38c7fce2a9f4e702702d73a39"
@@ -76,6 +82,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "4878a989f06edc7753985b216ace142aa58528ae5f92dc593baf640e8ed4de79"
+  inputs-digest = "73647f459552cf3a5f692f544c75a532e6eac2f19e51a965708aa0f7c1bd0b2c"
   solver-name = "gps-cdcl"
   solver-version = 1
