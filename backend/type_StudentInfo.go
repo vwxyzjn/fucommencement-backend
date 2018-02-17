@@ -114,34 +114,11 @@ func (s *Server) DeleteEntryByIDPreserveFiles(id string) {
 }
 
 func (s *Server) GetSettings() {
-	// sortReplicaIndex()
 	settings, err := s.AlgoliaIndex.GetSettings()
 	if err != nil {
 		panic(err)
 	}
 	PrettyPrint(settings.ToMap())
-}
-
-func migrateSetPrimaryIndex(indexName string) {
-	//
-}
-
-func (s *Server) addReplica(replicaNames []string) {
-	settings := algoliasearch.Map{
-		"replicas": replicaNames,
-	}
-	if _, err := s.AlgoliaIndex.SetSettings(settings); err != nil {
-		panic(err)
-	}
-}
-
-func (s *Server) sortReplicaIndex(rankings []string) {
-	settings := algoliasearch.Map{
-		"ranking": rankings,
-	}
-	if _, err := s.AlgoliaSortedIndex.SetSettings(settings); err != nil {
-		panic(err)
-	}
 }
 
 func (s *Server) Export() {
@@ -196,6 +173,25 @@ func (s *Server) GetNthEntryInIndex(n int) *StudentInfo {
 }
 
 // Migrate will properly set up the algolia index
-func Migrate(indexName string, sortedIndexName string) {
+func (s *Server) Migrate(indexName string, sortedIndexName string) {
 	// var x = []string{"asc(diplomaLastName)"}
+	// Updates the settings
+	s.setIndex(s.AlgoliaClient.InitIndex(indexName), algoliasearch.Map{
+		"searchableAttributes": []string{
+			"furmanID",
+			"name",
+		},
+		"replicas": []string{sortedIndexName},
+	})
+
+	// sort replicas
+	s.setIndex(s.AlgoliaClient.InitIndex(sortedIndexName), algoliasearch.Map{
+		"ranking": []string{"asc(diplomaLastName)"},
+	})
+}
+
+func (s *Server) setIndex(index algoliasearch.Index, settings algoliasearch.Map) {
+	if _, err := index.SetSettings(settings); err != nil {
+		panic(err)
+	}
 }
