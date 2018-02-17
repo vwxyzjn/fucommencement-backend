@@ -28,6 +28,7 @@ func main() {
 		AlgoliaIndexName:       indexName,
 		AlgoliaSortedIndexName: sortedIndexName,
 	}
-
-	server.Setup()
+	server.InitAlgolia()
+	server.Migrate(indexName, sortedIndexName)
+	// server.Setup()
 }

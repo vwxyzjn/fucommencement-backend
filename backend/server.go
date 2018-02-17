@@ -24,11 +24,15 @@ type Server struct {
 	AlgoliaSortedIndex     algoliasearch.Index
 }
 
-// Setup setups the server http end points
-func (s *Server) Setup() {
+// InitAlgolia initializes algolia client
+func (s *Server) InitAlgolia() {
 	s.AlgoliaClient = algoliasearch.NewClient(s.AlgoliaAppID, s.AlgoliaKey)
 	s.AlgoliaIndex = s.AlgoliaClient.InitIndex(s.AlgoliaIndexName)
 	s.AlgoliaSortedIndex = s.AlgoliaClient.InitIndex(s.AlgoliaSortedIndexName)
+}
+
+// Setup setups the server http end points
+func (s *Server) Setup() {
 	r := gin.Default()
 	r.Use(cors.Default())
 	r.GET("/ping", testGET)
