@@ -3,6 +3,7 @@ package backend
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"strconv"
 
 	"github.com/algolia/algoliasearch-client-go/algoliasearch"
@@ -43,11 +44,15 @@ func (s *Server) Setup() {
 	r.POST("/updateEntryPOST", s.updateEntryPOST)
 	r.StaticFS("/commencement", http.Dir("./commencement"))
 
-	err := http.ListenAndServeTLS(":443", "/etc/letsencrypt/live/dev.streettraffic.org/fullchain.pem", "/etc/letsencrypt/live/dev.streettraffic.org/privkey.pem", r)
-	if err != nil {
-		panic(err)
+	if os.Getenv("APP_ENVIRONMENT") == "development" {
+		r.Run(s.Port) // listen and serve on 0.0.0.0:8080
+	} else {
+		gin.SetMode(gin.ReleaseMode)
+		err := http.ListenAndServeTLS(":443", "/etc/letsencrypt/live/dev.streettraffic.org/fullchain.pem", "/etc/letsencrypt/live/dev.streettraffic.org/privkey.pem", r)
+		if err != nil {
+			panic(err)
+		}
 	}
-	// r.Run(s.Port) // listen and serve on 0.0.0.0:8080
 }
 
 func testGET(c *gin.Context) {

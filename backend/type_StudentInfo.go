@@ -164,6 +164,7 @@ func (s *Server) Test() {
 
 // GetNthEntryInIndex fetches the n-th ranked entry in the index
 // Notice this methods assume the default ``hitsPerPage`` is 20
+// See https://www.algolia.com/doc/api-reference/api-parameters/getRankingInfo/?language=go
 func (s *Server) GetNthEntryInIndex(n int) *StudentInfo {
 	fmt.Println("NthEntryInIndex")
 	res, _ := s.AlgoliaSortedIndex.Search("", algoliasearch.Map{
