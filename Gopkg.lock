@@ -26,6 +26,12 @@
   revision = "22d885f9ecc78bf4ee5d72b937e4bbcdc58e8cae"
 
 [[projects]]
+  name = "github.com/gin-gonic/autotls"
+  packages = ["."]
+  revision = "5b3297bdcee778ff3bbdc99ab7c41e1c2677d22d"
+  version = "0.0.1"
+
+[[projects]]
   name = "github.com/gin-gonic/gin"
   packages = [".","binding","render"]
   revision = "d459835d2b077e44f7c9b453505ee29881d5d12d"
@@ -63,6 +69,12 @@
 
 [[projects]]
   branch = "master"
+  name = "golang.org/x/crypto"
+  packages = ["acme","acme/autocert"]
+  revision = "650f4a345ab4e5b245a3034b110ebc7299e68186"
+
+[[projects]]
+  branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
   revision = "8dbc5d05d6edcc104950cc299a1ce6641235bc86"
@@ -82,6 +94,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "73647f459552cf3a5f692f544c75a532e6eac2f19e51a965708aa0f7c1bd0b2c"
+  inputs-digest = "9e5fbf042f49bb80c468c3dae15a46b066b03524127db267a19018ab71a782f1"
   solver-name = "gps-cdcl"
   solver-version = 1

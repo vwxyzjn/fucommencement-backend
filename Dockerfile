@@ -10,4 +10,4 @@ RUN mv dep-linux-amd64 /usr/bin/dep
 RUN chmod +x /usr/bin/dep
 RUN dep ensure
 
-EXPOSE 8080
+EXPOSE 8080 80 443
