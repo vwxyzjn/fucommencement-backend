@@ -2,13 +2,11 @@ package backend
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"strconv"
 
 	"github.com/algolia/algoliasearch-client-go/algoliasearch"
 	"github.com/gin-contrib/cors"
-	"github.com/gin-gonic/autotls"
 	"github.com/gin-gonic/gin"
 )
 
@@ -44,7 +42,11 @@ func (s *Server) Setup() {
 	r.POST("/commencementPOST", s.commencementPOST)
 	r.POST("/updateEntryPOST", s.updateEntryPOST)
 	r.StaticFS("/commencement", http.Dir("./commencement"))
-	log.Fatal(autotls.Run(r, "dev.streettraffic.org"))
+
+	err := http.ListenAndServeTLS(":443", "/etc/letsencrypt/live/dev.streettraffic.org/fullchain.pem", "/etc/letsencrypt/live/dev.streettraffic.org/privkey.pem", r)
+	if err != nil {
+		panic(err)
+	}
 	// r.Run(s.Port) // listen and serve on 0.0.0.0:8080
 }
 
