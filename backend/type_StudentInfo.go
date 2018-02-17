@@ -122,23 +122,27 @@ func (s *Server) GetSettings() {
 	PrettyPrint(settings.ToMap())
 }
 
-func (s *Server) addReplica() {
+func migrateSetPrimaryIndex(indexName string) {
+	//
+}
+
+func (s *Server) addReplica(replicaNames []string) {
 	settings := algoliasearch.Map{
-		"replicas": []string{"student_by_custom_sorting"},
+		"replicas": replicaNames,
 	}
 	if _, err := s.AlgoliaIndex.SetSettings(settings); err != nil {
 		panic(err)
 	}
 }
 
-// func (s *Server) sortReplicaIndex() {
-// 	settings := algoliasearch.Map{
-// 		"ranking": []string{"asc(diplomaLastName)"},
-// 	}
-// 	if _, err := s.AlgoliaSortedIndex.SetSettings(settings); err != nil {
-// 		panic(err)
-// 	}
-// }
+func (s *Server) sortReplicaIndex(rankings []string) {
+	settings := algoliasearch.Map{
+		"ranking": rankings,
+	}
+	if _, err := s.AlgoliaSortedIndex.SetSettings(settings); err != nil {
+		panic(err)
+	}
+}
 
 func (s *Server) Export() {
 	fmt.Println("Export being called")
@@ -189,4 +193,9 @@ func (s *Server) GetNthEntryInIndex(n int) *StudentInfo {
 		panic(err)
 	}
 	return &studentData
+}
+
+// Migrate will properly set up the algolia index
+func Migrate(indexName string, sortedIndexName string) {
+	// var x = []string{"asc(diplomaLastName)"}
 }
