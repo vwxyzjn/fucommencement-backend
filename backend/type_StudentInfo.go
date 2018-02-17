@@ -152,9 +152,14 @@ func (s *Server) Export() {
 	}
 }
 
-func Test() {
+func (s *Server) Test() {
 	// studentData := getEntryByFurmanID(991596)
 	// fmt.Println(studentData.FurmanID)
+	res, _ := s.AlgoliaClient.ListIndexes()
+	PrettyPrint(indexMap(res))
+	if indexMap(res)["name"] == true || indexMap(res)["student_by_custom_sorting"] == true {
+		panic("Indices already exist. Could not migrate!")
+	}
 }
 
 // GetNthEntryInIndex fetches the n-th ranked entry in the index
@@ -176,6 +181,15 @@ func (s *Server) GetNthEntryInIndex(n int) *StudentInfo {
 func (s *Server) Migrate(indexName string, sortedIndexName string) {
 	// var x = []string{"asc(diplomaLastName)"}
 	// Updates the settings
+	res, err := s.AlgoliaClient.ListIndexes()
+	if err != nil {
+		panic(err)
+	}
+	if indexMap(res)[indexName] == true || indexMap(res)[sortedIndexName] == true {
+		fmt.Println("Indices already exist. Could not migrate!")
+		return
+	}
+
 	s.setIndex(s.AlgoliaClient.InitIndex(indexName), algoliasearch.Map{
 		"searchableAttributes": []string{
 			"furmanID",
@@ -194,4 +208,12 @@ func (s *Server) setIndex(index algoliasearch.Index, settings algoliasearch.Map)
 	if _, err := index.SetSettings(settings); err != nil {
 		panic(err)
 	}
+}
+
+func indexMap(indices []algoliasearch.IndexRes) map[string]bool {
+	m := make(map[string]bool)
+	for _, item := range indices {
+		m[item.Name] = true
+	}
+	return m
 }
