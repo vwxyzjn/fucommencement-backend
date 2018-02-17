@@ -30,5 +30,5 @@ func main() {
 	}
 	server.InitAlgolia()
 	server.Migrate(indexName, sortedIndexName)
-	// server.Setup()
+	server.Setup()
 }
